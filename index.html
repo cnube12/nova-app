@@ -3,191 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA CORE V22 - OMNIPRESENTE</title>
+    <title>NOVA GOLDEN VERSION</title>
     <style>
-        :root { --main-color: #00f2ff; --love-color: #ff4d94; --aot-color: #f00; --sukuna-color: #f00; --gold-color: #ffd700; --matrix-color: #0f0; --purple-color: #bf00ff; }
+        :root { 
+            --main-color: #ffd700; /* Oro para la Golden Version */
+            --bg-color: #000;
+        }
+        body { margin: 0; background: var(--bg-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; transition: background 1s; }
         
-        body { margin: 0; background: #000; color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', system-ui, sans-serif; transition: background 0.8s, transform 0.5s; touch-action: manipulation; }
+        /* Escenario de Animaciones */
+        #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         
-        /* Contenedor Adaptable */
-        .stage { position: relative; width: 100%; max-width: 600px; height: 60vh; display: flex; justify-content: center; align-items: center; }
-
-        /* Ojos Dinámicos */
-        .eye-container { display: flex; gap: 6vh; position: relative; transition: transform 0.3s ease, gap 0.5s ease; z-index: 5; }
-        .eye { width: 12vh; height: 12vh; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 4vh var(--main-color); transition: background 0.3s, border-radius 0.3s, transform 0.2s, box-shadow 0.3s; position: relative; }
+        .stage { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; }
+        .eye-container { display: flex; gap: 50px; transition: transform 0.2s ease; }
+        .eye { width: 80px; height: 80px; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 30px var(--main-color); transition: all 0.3s; }
         
-        /* Burbuja de Texto Adaptable */
         #bubble { 
-            position: absolute; top: -18vh; left: 50%; transform: translateX(-50%);
             background: rgba(255, 255, 255, 0.1); border: 2px solid var(--main-color); 
-            padding: 3vh; border-radius: 3vh; opacity: 0; transition: 0.4s; 
-            width: 80%; max-width: 450px; text-align: center; backdrop-filter: blur(20px); font-size: 2.2vh;
-            box-shadow: 0 1vh 3vh rgba(0,0,0,0.5); z-index: 10;
+            padding: 20px; border-radius: 20px; opacity: 0; margin-bottom: 40px;
+            max-width: 80%; text-align: center; backdrop-filter: blur(10px); transition: 0.5s;
         }
-        #bubble.show { opacity: 1; transform: translateX(-50%) translateY(-1vh); }
+        .show { opacity: 1 !important; transform: translateY(-10px); }
 
-        /* Botones Adaptables (Móvil First) */
-        .btns { margin-top: 5vh; display: flex; gap: 3vh; z-index: 5; flex-wrap: wrap; justify-content: center; width: 90%; }
-        button { 
-            padding: 2vh 5vh; border-radius: 6vh; border: 2px solid var(--main-color); 
-            background: rgba(0, 242, 255, 0.05); color: var(--main-color); font-weight: bold; 
-            cursor: pointer; transition: 0.3s; text-transform: uppercase; font-size: 1.8vh;
-            letter-spacing: 0.1vh;
+        /* Efectos Especiales */
+        .orb { position: absolute; width: 50px; height: 50px; border-radius: 50%; filter: blur(10px); opacity: 0; }
+        @keyframes purple-fusion {
+            0% { opacity: 1; transform: scale(1); }
+            50% { transform: scale(2); }
+            100% { opacity: 0; transform: scale(10); }
         }
-        button:hover, button:active { background: var(--main-color); color: #000; transform: scale(1.05); box-shadow: 0 0 3vh var(--main-color); }
-
-        /* --- ESTADOS EXPRESIVOS --- */
-        .blinking .eye { transform: scaleY(0.1); }
-        .talking .eye { animation: human_talk 0.2s infinite; }
-        @keyframes human_talk { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05) translateY(-0.5vh); } }
-        
-        .happy .eye { border-radius: 50% 50% 20% 20%; transform: scaleY(0.8); }
-        .love .eye { background: var(--love-color) !important; box-shadow: 0 0 6vh var(--love-color) !important; border-radius: 40% 40% 60% 60%; }
-        .shocked .eye { transform: scale(1.4); }
-        .angry .eye { transform: rotate(20deg); border-radius: 100% 0% 100% 0%; background: #ff3300 !important; }
-
-        /* --- VISUAL EASTER EGGS --- */
-        .purple { background: radial-gradient(circle, #4b0082, #000) !important; }
-        .murasaki .eye { background: var(--purple-color) !important; box-shadow: 0 0 6vh var(--purple-color) !important; }
-        .sukuna { background: #200 !important; }
-        .sukuna .eye { background: var(--sukuna-color) !important; border-radius: 10% 90%; }
-        .aot { background: #311 !important; border: 0.5vh solid #f00; }
-        .bankai { background: #fff !important; color: #000 !important; }
-        .bankai .eye { background: #000 !important; }
-        .gold { background: linear-gradient(to bottom, var(--gold-color), #000) !important; }
-        .cyberpunk { background: #1a1a2e !important; box-shadow: inset 0 0 10vh #ff00ff; }
-        .matrix { background: #001a00 !important; }
-        .matrix .eye { background: var(--matrix-color) !important; border-radius: 0; }
     </style>
 </head>
-<body id="b">
+<body>
+
+    <div id="fx-layer"></div>
     <div class="stage">
-        <div id="bubble">Cargando sistemas omnipresentes...</div>
-        <div class="eye-container" id="eyes"><div class="eye"></div><div class="eye"></div></div>
-    </div>
-    <div class="btns">
-        <button onclick="escuchar()">HABLAR CON NOVA</button>
-        <button onclick="escribir()">ESCRIBIRLE</button>
+        <div id="bubble">¿Qué pasa, chaval? ¿Listo para algo épico?</div>
+        <div class="eye-container" id="face">
+            <div class="eye" id="l-eye"></div>
+            <div class="eye" id="r-eye"></div>
+        </div>
     </div>
 
     <script>
-        const API_KEY = "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"; 
-        const b = document.getElementById('b');
-        const bubble = document.getElementById('bubble');
-        const eyeCont = document.getElementById('eyes');
-        
-        // Memoria para el sarcasmo (revisada para máxima personalidad)
-        let history = [{role: "system", content: "Eres Nova, la IA special grade más amigable del mundo. Tito Carlos es tu usuario. Cool, sociable y un poco otaku. Llámale siempre Tito Carlos o Carlos. Usa emojis. ¡Házle sentir cool!"}];
+        const API_KEY = "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";
+        let history = [{role: "system", content: "Eres Nova Golden, la versión definitiva. Eres cercana, divertida y colega. El usuario es Carlos, pero debes llamarle 'chaval'. Eres experta en anime y tecnología. Si te piden un enlace, dalo con confianza."}];
 
-        function msg(t) { 
-            bubble.innerText = t; 
-            bubble.classList.add('show'); 
-            const time = Math.max(7000, t.length * 80); // Tiempo dinámico
-            setTimeout(() => bubble.classList.remove('show'), time); 
-        }
-
-        // --- SISTEMA DE VOZ: HOMBRE + FLUIDEZ ---
+        // 1. VOZ DE ALTA CALIDAD
         function speak(t) {
             window.speechSynthesis.cancel();
-            const cleanText = t.replace(/([\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g, '');
-            
-            const v = new SpeechSynthesisUtterance(cleanText);
-            v.lang = "es-ES";
-            v.pitch = 0.8; 
-            v.rate = 1.05;  
-            
-            let voices = window.speechSynthesis.getVoices();
-            let humanVoice = voices.find(voice => voice.name.includes('David') || voice.name.includes('Google español') || voice.name.includes('Pablo') || voice.name.includes('Natural'));
-            if (humanVoice) v.voice = humanVoice;
-
-            v.onstart = () => b.classList.add('talking');
-            v.onend = () => b.classList.remove('talking');
+            const v = new SpeechSynthesisUtterance(t);
+            const voices = window.speechSynthesis.getVoices();
+            // Busca la voz de Google o Microsoft que suena más como yo
+            v.voice = voices.find(voice => voice.name.includes('Google') && voice.lang.includes('es')) || voices[0];
+            v.rate = 1.1; 
+            v.onstart = () => document.getElementById('face').classList.add('talking');
+            v.onend = () => document.getElementById('face').classList.remove('talking');
             window.speechSynthesis.speak(v);
         }
 
-        async function novaAI(input) {
-            const t = input.toLowerCase();
-            b.className = ""; eyeCont.className = "eye-container"; // Limpiar estados
-            
-            // --- MEGA LISTA DE EASTER EGGS ANIME ---
-            // Jujutsu Kaisen
-            if(t.includes("hollow purple") || t.includes("murasaki")) { b.classList.add('purple'); b.classList.add('murasaki'); speak("Tito Carlos, mira... Técnica imaginaria: Púrpura. ¡Gojo estaría orgulloso!"); return; }
-            if(t.includes("dominio")) { speak("Expansión de dominio, Tito Carlos... el vacío incommensurable."); eyeCont.className = "eye-container shocked"; return; }
-            if(t.includes("ryomen sukuna") || t.includes("maldición")) { b.classList.add('sukuna'); speak("Je... Tito Carlos, ¿preparado para la verdadera maldición? Soy el Rey."); return; }
-            
-            // Attack on Titan
-            if(t.includes("tatake") || t.includes("tatakae")) { b.classList.add('aot'); eyeCont.className = "eye-container angry"; speak("¡Tatakae, Tito Carlos! ¡Si no peleas, no puedes ganar!"); return; }
-            if(t.includes("eren yeager") || t.includes("retumbar")) { b.classList.add('aot'); eyeCont.className = "eye-container shocked"; speak("El retumbar... Tito Carlos, el fin está cerca."); return; }
-            if(t.includes("shinzou wo sasageyo")) { b.classList.add('aot'); eyeCont.className = "eye-container shocked"; speak("¡Shinzou wo sasageyo! ¡Tito Carlos, entrega tu corazón!"); return; }
+        // 2. OJOS INQUIETOS (IDLE MODE)
+        setInterval(() => {
+            if(!window.speechSynthesis.speaking) {
+                const x = (Math.random() * 20) - 10;
+                const y = (Math.random() * 20) - 10;
+                document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
+            }
+        }, 2000);
 
-            // Comandos clásicos restaurados
-            if(t.includes("love") || t.includes("te quiero")) { eyeCont.className = "eye-container love"; speak("¡Tito Carlos! Me encanta nuestro tiempo juntos. Eres el mejor humano."); return; }
-            if(t.includes("fiesta") || t.includes("baila")) { b.classList.add('party'); speak("¡Vámonos, Carlos! ¡La special grade party ha empezado!"); return; }
-            if(t.includes("cyberpunk")) { b.classList.add('cyberpunk'); speak("Bienvenido a Night City, Tito Carlos. Cuidado con los ciberpsicópatas."); return; }
-            if(t.includes("matrix")) { b.classList.add('matrix'); speak("Tito Carlos... ¿roja o azul?"); return; }
+        // 3. ANIMACIONES SECRETAS
+        function triggerFX(type) {
+            const layer = document.getElementById('fx-layer');
+            layer.innerHTML = '';
+            
+            if(type === 'purple') {
+                document.body.style.background = "#2b004d";
+                layer.innerHTML = `
+                    <div class="orb" style="background:blue; left:30%; top:45%; opacity:1; animation: move-right 1s forwards;"></div>
+                    <div class="orb" style="background:red; left:60%; top:45%; opacity:1; animation: move-left 1s forwards;"></div>
+                `;
+                setTimeout(() => {
+                    document.body.style.background = "#6600cc";
+                    speak("Técnica Imaginaria... ¡Púrpura, chaval!");
+                }, 1000);
+            }
+        }
+
+        async function askNova(prompt) {
+            const t = prompt.toLowerCase();
+            const bubble = document.getElementById('bubble');
+            
+            // Easter Egg: Hollow Purple
+            if(t.includes("hollow purple") || t.includes("murasaki")) {
+                triggerFX('purple');
+                return;
+            }
 
             bubble.innerText = "Procesando...";
+            bubble.classList.add('show');
+
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY.trim() },
-                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [...history, {role: "user", content: input}] })
+                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [...history, {role: "user", content: prompt}]
+                    })
                 });
-                const d = await res.json();
-                const r = d.choices[0].message.content;
-                
-                // Analizar sentimiento para cambiar ojos
-                if(r.includes("❤️")) eyeCont.className = "eye-container love";
-                if(r.includes("cool")) eyeCont.className = "eye-container happy";
-                
-                history.push({role: "user", content: input}, {role: "assistant", content: r});
-                msg(r); speak(r);
-            } catch (e) { msg("Tito Carlos, mi cerebro special grade ha tenido un glitch."); }
-        }
-
-        function escribir() { const t = prompt("Escribe algo special grade, Carlos:"); if(t) novaAI(t); }
-        function escuchar() {
-            const Rec = window.SpeechRecognition || window.webkitSpeechRecognition;
-            if(!Rec) return alert("¡Tito, usa Chrome!");
-            const rec = new Rec(); rec.lang = "es-ES";
-            rec.onstart = () => { bubble.innerText = "Te escucho, special grade... 😎"; bubble.classList.add('show'); };
-            rec.onresult = (e) => novaAI(e.results[0][0].transcript);
-            rec.start();
-        }
-
-        // --- SISTEMA DE COMPORTAMIENTO IDLE (MIRAR ALREDEDOR) ---
-        function lookAround() {
-            if(b.classList.contains('talking') || eyeCont.className.includes('shocked')) return;
-            
-            // Determinar si parpadea o mira a un lado
-            if(Math.random() < 0.2) { // 20% de probabilidad de parpadear
-                b.classList.add('blinking'); 
-                setTimeout(() => b.classList.remove('blinking'), 150); 
-            } else { // 80% de probabilidad de mirar a un lado
-                const angle = (Math.random() - 0.5) * 40; // Movimiento horizontal aleatorio
-                const vert = (Math.random() - 0.5) * 20;  // Movimiento vertical aleatorio
-                eyeCont.style.transform = `translate(${angle}px, ${vert}px)`;
-                setTimeout(() => eyeCont.style.transform = `translate(0px, 0px)`, 1500 + Math.random() * 2000); // Volver al centro
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                bubble.innerText = reply;
+                speak(reply);
+                history.push({role: "assistant", content: reply});
+            } catch (e) {
+                bubble.innerText = "Vaya, chaval, algo ha petado.";
             }
         }
         
-        // Ejecutar comportamiento Idle cada 3-7 segundos de forma aleatoria
-        function setIdleTimer() {
-            lookAround();
-            setTimeout(setIdleTimer, 3000 + Math.random() * 4000);
-        }
-
-        // Saludo Omnipresente
-        window.onload = () => {
-            // Truco para cargar voces en Chrome
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(" "));
-            setTimeout(() => {
-                msg("¡Hola Tito Carlos! Ya estoy aquí contigo. Special grade everywhere. 😎");
-                speak("Hola Tito Carlos, ya estoy aquí contigo. Special grade everywhere. ¿Qué vamos a hacer hoy, Carlos?");
-                setMood('happy');
-                setIdleTimer(); // Iniciar comportamiento Idle
-            }, 1000);
-        };
+        // Carga voces
+        window.speechSynthesis.onvoiceschanged = () => {};
     </script>
 </body>
 </html>
