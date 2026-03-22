@@ -18,89 +18,78 @@
         }
         .show { opacity: 1 !important; transform: translateY(-10px); }
         .orb { position: absolute; width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); opacity: 0; z-index: 2; }
-        @keyframes fusion {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(15); opacity: 0; }
-        }
+        @keyframes fusion { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(15); opacity: 0; } }
     </style>
 </head>
 <body onclick="startNova()">
-
     <div id="fx-layer"></div>
     <div class="stage">
         <div id="bubble">¡Toca la pantalla, chaval!</div>
         <div class="eye-container" id="face">
-            <div class="eye" id="l-eye"></div>
-            <div class="eye" id="r-eye"></div>
+            <div class="eye"></div>
+            <div class="eye"></div>
         </div>
     </div>
-
     <script>
         const API_KEY = "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";
         let activated = false;
+        let history = [{role: "system", content: "Eres Nova Golden. Eres cercana y colega de Carlos. Debes llamarle 'chaval'. Si te piden 'Hollow Purple' o 'Murasaki', responde con épica anime. Eres la versión definitiva."}];
 
-        // 1. VOZ MEJORADA
         function speak(t) {
             window.speechSynthesis.cancel();
             const v = new SpeechSynthesisUtterance(t);
-            const voices = window.speechSynthesis.getVoices();
-            v.voice = voices.find(voice => voice.lang.includes('es')) || voices[0];
+            v.lang = 'es-ES';
             v.rate = 1.1;
-            v.pitch = 1;
             window.speechSynthesis.speak(v);
         }
 
-        // 2. ACTIVACIÓN AL TOCAR
         function startNova() {
             if(!activated) {
                 activated = true;
                 const b = document.getElementById('bubble');
-                b.innerText = "¿Qué pasa, chaval? Soy Nova Golden. ¡Pídeme lo que quieras!";
+                b.innerText = "¿Qué pasa, chaval? Soy Nova Golden. ¡Tócame otra vez para hablar!";
                 b.classList.add('show');
                 speak(b.innerText);
-                startIdle();
+                // Ojos inquietos
+                setInterval(() => {
+                    const x = (Math.random() * 30) - 15;
+                    const y = (Math.random() * 20) - 10;
+                    document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
+                }, 2000);
             } else {
-                // Aquí podrías añadir el reconocimiento de voz si quieres hablarle
                 const p = prompt("Dime algo, chaval:");
                 if(p) runNova(p);
             }
         }
 
-        // 3. OJOS QUE MIRAN A LOS LADOS
-        function startIdle() {
-            setInterval(() => {
-                const x = (Math.random() * 40) - 20;
-                const y = (Math.random() * 20) - 10;
-                document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
-            }, 2500);
-        }
-
-        // 4. EL FAMOSO HOLLOW PURPLE
         function triggerPurple() {
             const layer = document.getElementById('fx-layer');
-            document.body.style.background = "#1a0033";
-            layer.innerHTML = `
-                <div class="orb" style="background:blue; left:20%; top:45%; opacity:1; transition: all 1s;" id="blue"></div>
-                <div class="orb" style="background:red; left:70%; top:45%; opacity:1; transition: all 1s;" id="red"></div>
-            `;
-            setTimeout(() => {
-                document.getElementById('blue').style.left = "45%";
-                document.getElementById('red').style.left = "45%";
-                setTimeout(() => {
-                    layer.innerHTML = '<div style="width:100%; height:100%; background:#6600cc; animation: fusion 0.8s forwards;"></div>';
-                    document.body.style.background = "#330066";
-                    speak("¡Técnica Imaginaria: Púrpura! Gojo estaría orgulloso, chaval.");
-                }, 1000);
-            }, 100);
+            layer.innerHTML = '<div style="width:100%; height:100%; background:#6600cc; animation: fusion 0.8s forwards;"></div>';
+            speak("¡Técnica Imaginaria: Púrpura! ¡BOOM, chaval!");
+            setTimeout(() => { layer.innerHTML = ''; }, 2000);
         }
 
         async function runNova(input) {
-            const t = input.toLowerCase();
-            if(t.includes("hollow purple") || t.includes("murasaki")) {
+            if(input.toLowerCase().includes("hollow purple") || input.toLowerCase().includes("murasaki")) {
                 triggerPurple();
                 return;
             }
-            // Aquí iría el resto de la lógica de la API de Groq...
+            const b = document.getElementById('bubble');
+            b.innerText = "Pensando...";
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
+                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [...history, {role: "user", content: input}] })
+                });
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                b.innerText = reply;
+                speak(reply);
+                history.push({role: "assistant", content: reply});
+            } catch (e) {
+                b.innerText = "Algo ha fallado, chaval. Mira la conexión.";
+            }
         }
     </script>
 </body>
