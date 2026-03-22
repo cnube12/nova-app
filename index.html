@@ -5,40 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>NOVA GOLDEN VERSION</title>
     <style>
-        :root { 
-            --main-color: #ffd700; /* Oro para la Golden Version */
-            --bg-color: #000;
-        }
-        body { margin: 0; background: var(--bg-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; transition: background 1s; }
-        
-        /* Escenario de Animaciones */
+        :root { --main-color: #ffd700; --bg-color: #000; }
+        body { margin: 0; background: var(--bg-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; transition: background 1s; cursor: pointer; }
         #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        
         .stage { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; }
-        .eye-container { display: flex; gap: 50px; transition: transform 0.2s ease; }
-        .eye { width: 80px; height: 80px; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 30px var(--main-color); transition: all 0.3s; }
-        
+        .eye-container { display: flex; gap: 50px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .eye { width: 80px; height: 80px; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 40px var(--main-color); transition: all 0.3s; }
         #bubble { 
             background: rgba(255, 255, 255, 0.1); border: 2px solid var(--main-color); 
             padding: 20px; border-radius: 20px; opacity: 0; margin-bottom: 40px;
-            max-width: 80%; text-align: center; backdrop-filter: blur(10px); transition: 0.5s;
+            max-width: 85%; text-align: center; backdrop-filter: blur(10px); transition: 0.5s; font-weight: bold;
         }
         .show { opacity: 1 !important; transform: translateY(-10px); }
-
-        /* Efectos Especiales */
-        .orb { position: absolute; width: 50px; height: 50px; border-radius: 50%; filter: blur(10px); opacity: 0; }
-        @keyframes purple-fusion {
-            0% { opacity: 1; transform: scale(1); }
-            50% { transform: scale(2); }
-            100% { opacity: 0; transform: scale(10); }
+        .orb { position: absolute; width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); opacity: 0; z-index: 2; }
+        @keyframes fusion {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(15); opacity: 0; }
         }
     </style>
 </head>
-<body>
+<body onclick="startNova()">
 
     <div id="fx-layer"></div>
     <div class="stage">
-        <div id="bubble">¿Qué pasa, chaval? ¿Listo para algo épico?</div>
+        <div id="bubble">¡Toca la pantalla, chaval!</div>
         <div class="eye-container" id="face">
             <div class="eye" id="l-eye"></div>
             <div class="eye" id="r-eye"></div>
@@ -47,82 +37,71 @@
 
     <script>
         const API_KEY = "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";
-        let history = [{role: "system", content: "Eres Nova Golden, la versión definitiva. Eres cercana, divertida y colega. El usuario es Carlos, pero debes llamarle 'chaval'. Eres experta en anime y tecnología. Si te piden un enlace, dalo con confianza."}];
+        let activated = false;
 
-        // 1. VOZ DE ALTA CALIDAD
+        // 1. VOZ MEJORADA
         function speak(t) {
             window.speechSynthesis.cancel();
             const v = new SpeechSynthesisUtterance(t);
             const voices = window.speechSynthesis.getVoices();
-            // Busca la voz de Google o Microsoft que suena más como yo
-            v.voice = voices.find(voice => voice.name.includes('Google') && voice.lang.includes('es')) || voices[0];
-            v.rate = 1.1; 
-            v.onstart = () => document.getElementById('face').classList.add('talking');
-            v.onend = () => document.getElementById('face').classList.remove('talking');
+            v.voice = voices.find(voice => voice.lang.includes('es')) || voices[0];
+            v.rate = 1.1;
+            v.pitch = 1;
             window.speechSynthesis.speak(v);
         }
 
-        // 2. OJOS INQUIETOS (IDLE MODE)
-        setInterval(() => {
-            if(!window.speechSynthesis.speaking) {
-                const x = (Math.random() * 20) - 10;
+        // 2. ACTIVACIÓN AL TOCAR
+        function startNova() {
+            if(!activated) {
+                activated = true;
+                const b = document.getElementById('bubble');
+                b.innerText = "¿Qué pasa, chaval? Soy Nova Golden. ¡Pídeme lo que quieras!";
+                b.classList.add('show');
+                speak(b.innerText);
+                startIdle();
+            } else {
+                // Aquí podrías añadir el reconocimiento de voz si quieres hablarle
+                const p = prompt("Dime algo, chaval:");
+                if(p) runNova(p);
+            }
+        }
+
+        // 3. OJOS QUE MIRAN A LOS LADOS
+        function startIdle() {
+            setInterval(() => {
+                const x = (Math.random() * 40) - 20;
                 const y = (Math.random() * 20) - 10;
                 document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
-            }
-        }, 2000);
-
-        // 3. ANIMACIONES SECRETAS
-        function triggerFX(type) {
-            const layer = document.getElementById('fx-layer');
-            layer.innerHTML = '';
-            
-            if(type === 'purple') {
-                document.body.style.background = "#2b004d";
-                layer.innerHTML = `
-                    <div class="orb" style="background:blue; left:30%; top:45%; opacity:1; animation: move-right 1s forwards;"></div>
-                    <div class="orb" style="background:red; left:60%; top:45%; opacity:1; animation: move-left 1s forwards;"></div>
-                `;
-                setTimeout(() => {
-                    document.body.style.background = "#6600cc";
-                    speak("Técnica Imaginaria... ¡Púrpura, chaval!");
-                }, 1000);
-            }
+            }, 2500);
         }
 
-        async function askNova(prompt) {
-            const t = prompt.toLowerCase();
-            const bubble = document.getElementById('bubble');
-            
-            // Easter Egg: Hollow Purple
+        // 4. EL FAMOSO HOLLOW PURPLE
+        function triggerPurple() {
+            const layer = document.getElementById('fx-layer');
+            document.body.style.background = "#1a0033";
+            layer.innerHTML = `
+                <div class="orb" style="background:blue; left:20%; top:45%; opacity:1; transition: all 1s;" id="blue"></div>
+                <div class="orb" style="background:red; left:70%; top:45%; opacity:1; transition: all 1s;" id="red"></div>
+            `;
+            setTimeout(() => {
+                document.getElementById('blue').style.left = "45%";
+                document.getElementById('red').style.left = "45%";
+                setTimeout(() => {
+                    layer.innerHTML = '<div style="width:100%; height:100%; background:#6600cc; animation: fusion 0.8s forwards;"></div>';
+                    document.body.style.background = "#330066";
+                    speak("¡Técnica Imaginaria: Púrpura! Gojo estaría orgulloso, chaval.");
+                }, 1000);
+            }, 100);
+        }
+
+        async function runNova(input) {
+            const t = input.toLowerCase();
             if(t.includes("hollow purple") || t.includes("murasaki")) {
-                triggerFX('purple');
+                triggerPurple();
                 return;
             }
-
-            bubble.innerText = "Procesando...";
-            bubble.classList.add('show');
-
-            try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [...history, {role: "user", content: prompt}]
-                    })
-                });
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                bubble.innerText = reply;
-                speak(reply);
-                history.push({role: "assistant", content: reply});
-            } catch (e) {
-                bubble.innerText = "Vaya, chaval, algo ha petado.";
-            }
+            // Aquí iría el resto de la lógica de la API de Groq...
         }
-        
-        // Carga voces
-        window.speechSynthesis.onvoiceschanged = () => {};
     </script>
 </body>
 </html>
