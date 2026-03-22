@@ -3,27 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA GOLDEN VERSION</title>
+    <title>NOVA GOLDEN - 15 VISUAL EFFECTS</title>
     <style>
-        :root { --main-color: #ffd700; --bg-color: #000; }
-        body { margin: 0; background: var(--bg-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; transition: background 1s; cursor: pointer; }
-        #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .stage { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; }
-        .eye-container { display: flex; gap: 50px; transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .eye { width: 80px; height: 80px; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 40px var(--main-color); transition: all 0.3s; }
+        :root { --main-color: #ffd700; --bg-color: #000; --fx-blue: #0088ff; --fx-red: #ff3300; --fx-purple: #9900ff; --fx-green: #00ff00; }
+        body { margin: 0; background: var(--bg-color); color: #fff; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; overflow: hidden; font-family: 'Segoe UI', sans-serif; transition: background 1s, filter 0.3s; cursor: pointer; }
+        #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; opacity: 0; transition: opacity 0.5s; }
+        .stage { position: relative; z-index: 5; display: flex; flex-direction: column; align-items: center; transition: transform 0.3s; }
+        .eye-container { display: flex; gap: 50px; transition: transform 0.2s; }
+        .eye { width: 80px; height: 80px; background: var(--main-color); border-radius: 50%; box-shadow: 0 0 40px var(--main-color); transition: all 0.3s, transform 0.1s; }
         #bubble { 
             background: rgba(255, 255, 255, 0.1); border: 2px solid var(--main-color); 
             padding: 20px; border-radius: 20px; opacity: 0; margin-bottom: 40px;
             max-width: 85%; text-align: center; backdrop-filter: blur(10px); transition: 0.5s; font-weight: bold;
         }
         .show { opacity: 1 !important; transform: translateY(-10px); }
-        .orb { position: absolute; width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); opacity: 0; z-index: 2; }
-        @keyframes fusion { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(15); opacity: 0; } }
+
+        /* --- ANIMACIONES DE LOS EFECTOS --- */
+        .orb { position: absolute; width: 60px; height: 60px; border-radius: 50%; filter: blur(15px); }
+        @keyframes fusion { 0% { transform: scale(1); opacity: 1; } 100% { transform: scale(20); opacity: 0; } }
+        @keyframes matrix-code { 0% { background-position: 0 0; } 100% { background-position: 0 1000px; } }
+        @keyframes pokeball { 0% { transform: scale(0); opacity:0; } 50% { transform: scale(1.2); opacity:1; } 100% { transform: scale(1); opacity:0; } }
+        @keyframes slice { 0% { transform: translateX(-100%) translateY(-100%) rotate(-45deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translateX(100%) translateY(100%) rotate(-45deg); opacity: 0; } }
+        @keyframes kamehameha { 0% { transform: scale(0); box-shadow: 0 0 20px #fff; } 100% { transform: scale(10); box-shadow: 0 0 100px #fff; opacity:0; } }
     </style>
 </head>
 <body onclick="startNova()">
     <div id="fx-layer"></div>
-    <div class="stage">
+    <div class="stage" id="main-stage">
         <div id="bubble">¡Toca la pantalla, chaval!</div>
         <div class="eye-container" id="face">
             <div class="eye"></div>
@@ -33,21 +39,146 @@
     <script>
         const API_KEY = "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";
         let activated = false;
-        let history = [{role: "system", content: "Eres Nova Golden. Eres cercana y colega de Carlos. Debes llamarle 'chaval'. Si te piden 'Hollow Purple' o 'Murasaki', responde con épica anime. Eres la versión definitiva."}];
+        let history = [{role: "system", content: "Eres Nova Golden. Eres colega de Carlos, llámale 'chaval'. Eres experta en anime y te encanta usar efectos visuales épicos."}];
 
+        // --- DEFINICIÓN DE LOS 15 EFECTOS ---
+        const fx = {
+            "hollow purple": {
+                msg: "¡Técnica Imaginaria: Púrpura! ¡BOOM, chaval!",
+                v: 'es-ES', r: 1.2,
+                run: () => {
+                    document.body.style.background = "#1a0033";
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.innerHTML = `
+                        <div class="orb" style="background:var(--fx-blue); left:20%; top:45%; opacity:1; transition: all 0.8s ease-in;" id="b-orb"></div>
+                        <div class="orb" style="background:var(--fx-red); left:70%; top:45%; opacity:1; transition: all 0.8s ease-in;" id="r-orb"></div>
+                    `;
+                    fxLayer.style.opacity = 1;
+                    setTimeout(() => {
+                        document.getElementById('b-orb').style.left = "45%";
+                        document.getElementById('r-orb').style.left = "45%";
+                        setTimeout(() => {
+                            fxLayer.innerHTML = '<div style="width:100%; height:100%; background:var(--fx-purple); animation: fusion 0.6s forwards;"></div>';
+                            document.body.style.background = "#330066";
+                        }, 800);
+                    }, 100);
+                }
+            },
+            "matrix": {
+                msg: "Veo el código caer, chaval. ¿Roja o Azul?",
+                run: () => {
+                    document.body.style.backgroundImage = "linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==')";
+                    document.body.style.backgroundSize = "20px 20px";
+                    document.body.style.animation = "matrix-code 10s linear infinite";
+                    document.body.style.color = "#0f0";
+                    document.documentElement.style.setProperty('--main-color', '#0f0');
+                }
+            },
+            "sukuna": {
+                msg: "¡Expansión de Dominio: Santuario Malévolo! ¡Corte, chaval!",
+                run: () => {
+                    document.body.style.filter = "sepia(1) hue-rotate(-20deg) saturate(1.5)";
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.style.opacity = 1;
+                    fxLayer.innerHTML = '<div style="position:absolute; width:10px; height:200%; background:white; left:50%; top:-50%; animation: slice 0.5s forwards; box-shadow: 0 0 20px red;"></div>';
+                }
+            },
+            "goku": {
+                msg: "¡Hola, soy Goku! ¡Toma mi energía!",
+                run: () => {
+                    document.body.style.background = "#44ccff";
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.style.opacity = 1;
+                    fxLayer.innerHTML = '<div style="position:absolute; width:50px; height:50px; background:white; border-radius:50%; left:45%; top:45%; animation: kamehameha 0.5s ease-out; filter:blur(10px);"></div>';
+                }
+            },
+            "zoro": {
+                msg: "¡Vaya, chaval, me he vuelto a perder!",
+                run: () => {
+                    document.getElementById('main-stage').style.transform = "rotate(-20deg) scale(0.9) translateX(100px)";
+                    setTimeout(() => {
+                        document.getElementById('main-stage').style.transform = "rotate(20deg) scale(0.9) translateX(-100px)";
+                        setTimeout(() => {
+                            document.getElementById('main-stage').style.transform = "rotate(0) scale(1)";
+                        }, 1000);
+                    }, 1000);
+                }
+            },
+            "sharingan": {
+                msg: "Ya estás bajo mi ilusión... cuidado, chaval.",
+                run: () => {
+                    document.body.style.background = "#300";
+                    const eyes = document.getElementsByClassName('eye');
+                    for (let eye of eyes) {
+                        eye.style.background = "#ff3300";
+                        eye.style.boxShadow = "0 0 40px #ff3300";
+                        eye.style.transform = "scale(1.2) rotate(180deg)";
+                    }
+                }
+            },
+            "vegeta": {
+                msg: "¡Su poder es de más de 9000!",
+                run: () => {
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.style.opacity = 1;
+                    fxLayer.innerHTML = '<div style="width:100%; height:100%; box-shadow: inset 0 0 100px #33ff00, inset 0 0 200px #33ff00;"></div>';
+                }
+            },
+            "pokemon": {
+                msg: "¡Te elijo a ti, chaval! ¡Hazte con todos!",
+                run: () => {
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.style.opacity = 1;
+                    fxLayer.innerHTML = '<div style="position:absolute; width:80px; height:80px; border-radius:50%; background:linear-gradient(red 50%, white 50%); left:45%; top:45%; border: 5px solid black; animation: pokeball 1.5s forwards;"></div>';
+                }
+            },
+            "shin chan": {
+                msg: "¡Culetazo, culetazo! ¡Yeeeey, chaval!",
+                run: () => {
+                    const fxLayer = document.getElementById('fx-layer');
+                    fxLayer.style.opacity = 1;
+                    fxLayer.innerHTML = `
+                        <div class="orb" style="background:#ff9966; left:35%; top:50%; opacity:1;"></div>
+                        <div class="orb" style="background:#ff9966; left:55%; top:50%; opacity:1;"></div>
+                    `;
+                    for(let eye of document.getElementsByClassName('eye')) { eye.style.transform = "translateY(20px)"; }
+                }
+            },
+            "naruto": { msg: "¡Vaya que sí, chaval! ¡Es mi camino ninja!", run: () => { document.body.style.background = "#ff6600"; } },
+            "death note": { msg: "¡Cuidado con lo que escribes!", run: () => { document.body.style.filter = "grayscale(1) invert(0.1)"; } },
+            "one piece": { msg: "¡Voy a ser el Rey de los Piratas!", run: () => { document.body.style.background = "#ffcc66"; } },
+            "luffy": { msg: "¡Gear Second, chaval!", run: () => { document.body.style.filter = "brightness(1.5) saturate(1.5)"; } },
+            "itachi": { msg: "Crows...", run: () => { document.body.style.background = "#111"; document.body.style.filter="blur(2px)"; } },
+            "zoro": { msg: "¡Santoryu!", run: () => { document.body.style.transform = "translateX(50px)"; } },
+            "saitama": { msg: "Un puñetazo.", run: () => { document.body.style.background = "#ee2222"; } },
+            "totoro": { msg: "...", run: () => { document.body.style.background = "#999999"; } }
+        };
+
+        // --- MOTOR DE VOZ Y ACTIVACIÓN ---
         function speak(t) {
             window.speechSynthesis.cancel();
             const v = new SpeechSynthesisUtterance(t);
             v.lang = 'es-ES';
-            v.rate = 1.1;
+            v.rate = 1.2;
             window.speechSynthesis.speak(v);
+        }
+
+        function resetFX() {
+            document.body.style = "";
+            document.documentElement.style = "";
+            document.body.style.filter = "none";
+            document.getElementById('main-stage').style = "";
+            document.getElementById('fx-layer').innerHTML = '';
+            document.getElementById('fx-layer').style.opacity = 0;
+            const eyes = document.getElementsByClassName('eye');
+            for (let eye of eyes) { eye.style = ""; }
         }
 
         function startNova() {
             if(!activated) {
                 activated = true;
                 const b = document.getElementById('bubble');
-                b.innerText = "¿Qué pasa, chaval? Soy Nova Golden. ¡Tócame otra vez para hablar!";
+                b.innerText = "¿Qué pasa, chaval? Soy Nova Golden. ¡Pídeme lo que quieras con épica visual!";
                 b.classList.add('show');
                 speak(b.innerText);
                 // Ojos inquietos
@@ -57,25 +188,28 @@
                     document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
                 }, 2000);
             } else {
-                const p = prompt("Dime algo, chaval:");
+                const p = prompt("Dime algo épico, chaval:");
                 if(p) runNova(p);
             }
         }
 
-        function triggerPurple() {
-            const layer = document.getElementById('fx-layer');
-            layer.innerHTML = '<div style="width:100%; height:100%; background:#6600cc; animation: fusion 0.8s forwards;"></div>';
-            speak("¡Técnica Imaginaria: Púrpura! ¡BOOM, chaval!");
-            setTimeout(() => { layer.innerHTML = ''; }, 2000);
-        }
-
         async function runNova(input) {
-            if(input.toLowerCase().includes("hollow purple") || input.toLowerCase().includes("murasaki")) {
-                triggerPurple();
-                return;
-            }
+            const t = input.toLowerCase();
             const b = document.getElementById('bubble');
-            b.innerText = "Pensando...";
+            resetFX(); // Limpiar efecto anterior
+
+            // Buscar Easter Eggs Visuales
+            for (let key in fx) {
+                if(t.includes(key)) {
+                    fx[key].run();
+                    b.innerText = fx[key].msg;
+                    speak(fx[key].msg);
+                    return;
+                }
+            }
+
+            // Si no hay huevo de pascua, respuesta normal con Groq
+            b.innerText = "Pensando, chaval...";
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
@@ -86,9 +220,8 @@
                 const reply = data.choices[0].message.content;
                 b.innerText = reply;
                 speak(reply);
-                history.push({role: "assistant", content: reply});
             } catch (e) {
-                b.innerText = "Algo ha fallado, chaval. Mira la conexión.";
+                b.innerText = "Algo ha fallado en la conexión, chaval.";
             }
         }
     </script>
