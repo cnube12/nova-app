@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM FULL 35</title>
+    <title>NOVA PLATINUM - THE 35 EGGS EDITION</title>
     <style>
-        :root { --eye-bright: #e5e4e2; --eye-dark: #7e7e7e; --bg: #000; }
+        :root { --eye-color: #ffffff; --bg: #000; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'SF Pro Display', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        #text-frame { width: 85%; max-height: 180px; background: rgba(255,255,255,0.05); border: 1px solid var(--eye-bright); border-radius: 15px; margin-bottom: 40px; padding: 20px; overflow-y: auto; backdrop-filter: blur(15px); z-index: 10; opacity: 0; transition: 0.5s; text-align: center; }
+        #text-frame { width: 80%; max-height: 180px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; margin-bottom: 50px; padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); z-index: 10; opacity: 0; transition: 0.8s; text-align: center; }
         #text-frame.visible { opacity: 1; }
-        .eye-container { display: flex; gap: 60px; z-index: 10; transition: 0.4s; }
-        .eye { width: 85px; height: 85px; background: radial-gradient(circle, var(--eye-bright) 0%, var(--eye-dark) 70%); border-radius: 50%; box-shadow: 0 0 35px rgba(229, 228, 226, 0.4), 0 0 15px var(--eye-bright); transition: 0.3s; filter: blur(0.5px); }
-        .eye.proud { transform: scale(1.15) translateY(-10px); filter: brightness(1.3) blur(1px); }
-        .eye.angry { transform: scaleY(0.4); box-shadow: 0 0 25px #ff3300; }
-        .eye.blink { transform: scaleY(0.01); }
-        #mic-btn { position: fixed; bottom: 30px; width: 60px; height: 60px; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--eye-bright); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 100; transition: 0.3s; }
-        #mic-btn.active { background: #ff3300; border-color: #ff3300; box-shadow: 0 0 20px #ff3300; }
+        .eye-container { display: flex; gap: 70px; z-index: 10; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        .eye { width: 75px; height: 75px; background: var(--eye-color); border-radius: 50%; box-shadow: 0 0 30px var(--eye-color), 0 0 60px rgba(255,255,255,0.1); transition: height 0.1s, transform 0.1s, background 0.3s; }
+        .eye.proud { transform: scale(1.2); box-shadow: 0 0 50px var(--eye-color); }
+        .eye.angry { transform: scaleY(0.3); background: #aaa; box-shadow: 0 0 15px white; }
+        .eye.blink { height: 1px !important; }
+        #mic-btn { position: fixed; bottom: 30px; width: 65px; height: 65px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 100; transition: 0.3s; }
+        #mic-btn.active { background: rgba(255,255,255,0.2); box-shadow: 0 0 20px white; }
         @keyframes rumble { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } 100% { transform: translate(1px, 1px); } }
         .shake { animation: rumble 0.1s infinite; }
     </style>
@@ -39,7 +39,7 @@
             "eren": { msg: "¡Retumbar!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
             "sukuna": { msg: "Corte dimensional.", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:2px;background:white;position:absolute;top:50%;box-shadow:0 0 15px red;"></div>'; }},
             "goku": { msg: "¡Kamehameha!", emo: "proud", run: () => { document.body.style.background = "#001122"; }},
-            "sharingan": { msg: "Cuidado con mi mirada.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); }},
+            "sharingan": { msg: "Te observo.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); }},
             "matrix": { msg: "Veo el código.", emo: "proud", run: () => { document.body.style.background = "#020"; }},
             "vegeta": { msg: "¡Insecto!", emo: "angry", run: () => { document.body.style.filter = "contrast(1.5)"; }},
             "luffy": { msg: "¡Gear Second!", emo: "proud", run: () => { document.body.style.filter = "brightness(1.5) saturate(1.5)"; }},
@@ -67,17 +67,43 @@
             "mikasa": { msg: "Eres familia.", emo: "proud", run: () => { document.body.style.background = "#400"; }},
             "inosuke": { msg: "¡Asalto!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
             "nezuko": { msg: "¡Mmh!", emo: "proud", run: () => { document.body.style.background = "pink"; }},
-            "bakugo": { msg: "¡Shine!", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:100%;background:orange;animation:rumble 0.2s infinite;"></div>'; }},
+            "bakugo": { msg: "¡Shine!", emo: "angry", run: () => { document.body.style.background = "orange"; }},
             "hisoka": { msg: "Bungee Gum.", emo: "proud", run: () => { document.body.style.background = "#ff00ff"; }},
             "sanji": { msg: "Diable Jambe.", emo: "proud", run: () => { document.body.style.background = "#ff4500"; }}
         };
 
-        function setEmotion(emo) { eyes.forEach(e => { e.classList.remove('proud', 'angry'); if(emo) e.classList.add(emo); }); }
         function cleanText(t) { return t.replace(/[*#_~-]/g, ''); }
         function speak(t) { window.speechSynthesis.cancel(); const v = new SpeechSynthesisUtterance(cleanText(t)); v.lang = 'es-ES'; window.speechSynthesis.speak(v); }
 
-        function handleInteraction(e) { if (e.target.id === 'mic-btn' || isListening) return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
-        function toggleMic(e) { e.stopPropagation(); if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } else { recognition.stop(); } }
+        function lookAround() {
+            if (!isListening) {
+                const x = (Math.random() * 30) - 15;
+                const y = (Math.random() * 15) - 7;
+                document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
+            }
+            setTimeout(lookAround, Math.random() * 3000 + 1000);
+        }
+        lookAround();
+
+        function naturalBlink() {
+            eyes.forEach(e => e.classList.add('blink'));
+            setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 120);
+            setTimeout(naturalBlink, Math.random() * 6000 + 1000);
+        }
+        naturalBlink();
+
+        function handleInteraction(e) {
+            if (e.target.id === 'mic-btn' || isListening) return;
+            const p = prompt("Dime algo, chaval:");
+            if(p) runNova(p);
+        }
+
+        function toggleMic(e) {
+            e.stopPropagation();
+            if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); }
+            else { recognition.stop(); }
+        }
+
         recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('active'); };
         recognition.onresult = (e) => { runNova(e.results[0][0].transcript); };
 
@@ -85,21 +111,34 @@
             const t = input.toLowerCase();
             const b = document.getElementById('bubble');
             const frame = document.getElementById('text-frame');
-            document.body.className = ""; document.body.style = ""; document.getElementById('fx-layer').innerHTML = ""; setEmotion(null);
-            for (let key in eggs) { if (t.includes(key)) { eggs[key].run(); setEmotion(eggs[key].emo); b.innerText = eggs[key].msg; frame.classList.add('visible'); speak(eggs[key].msg); return; } }
+            document.body.className = ""; document.body.style.background = "#000"; document.body.style.filter = "none";
+            document.getElementById('fx-layer').innerHTML = "";
+            eyes.forEach(e => {e.classList.remove('proud', 'angry'); e.style.background = "white";});
+            
+            for (let key in eggs) {
+                if (t.includes(key)) {
+                    eggs[key].run();
+                    if(eggs[key].emo === "proud") eyes.forEach(e=>e.classList.add('proud'));
+                    if(eggs[key].emo === "angry") eyes.forEach(e=>e.classList.add('angry'));
+                    b.innerText = eggs[key].msg;
+                    frame.classList.add('visible');
+                    speak(eggs[key].msg);
+                    return;
+                }
+            }
+
             b.innerText = "Pensando..."; frame.classList.add('visible');
             try {
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
-                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova Platinum. Llama al usuario chaval. No uses asteriscos."}, {role:"user", content:input}] })
+                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova. Colega de Carlos (chaval). No uses asteriscos."}, {role:"user", content:input}] })
                 });
                 const data = await res.json();
                 const reply = data.choices[0].message.content;
                 b.innerText = reply; speak(reply);
-            } catch (e) { b.innerText = "Error, chaval."; }
+            } catch (e) { b.innerText = "Error de conexión, chaval."; }
         }
-        setInterval(() => { eyes.forEach(e => e.classList.add('blink')); setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 150); }, 4000);
     </script>
 </body>
 </html>
