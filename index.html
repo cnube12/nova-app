@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM - THE 35 EGGS EDITION</title>
+    <title>NOVA - PURE LIGHT 35 EGGS</title>
     <style>
         :root { --eye-color: #ffffff; --bg: #000; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'SF Pro Display', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        #text-frame { width: 80%; max-height: 180px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.2); border-radius: 15px; margin-bottom: 50px; padding: 20px; overflow-y: auto; backdrop-filter: blur(10px); z-index: 10; opacity: 0; transition: 0.8s; text-align: center; }
+        #text-frame { width: 80%; max-height: 180px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; margin-bottom: 60px; padding: 20px; overflow-y: auto; backdrop-filter: blur(15px); z-index: 10; opacity: 0; transition: 0.6s; text-align: center; }
         #text-frame.visible { opacity: 1; }
-        .eye-container { display: flex; gap: 70px; z-index: 10; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        .eye { width: 75px; height: 75px; background: var(--eye-color); border-radius: 50%; box-shadow: 0 0 30px var(--eye-color), 0 0 60px rgba(255,255,255,0.1); transition: height 0.1s, transform 0.1s, background 0.3s; }
-        .eye.proud { transform: scale(1.2); box-shadow: 0 0 50px var(--eye-color); }
-        .eye.angry { transform: scaleY(0.3); background: #aaa; box-shadow: 0 0 15px white; }
+        .eye-container { display: flex; gap: 75px; z-index: 10; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .eye { width: 70px; height: 70px; background: var(--eye-color); border-radius: 50%; box-shadow: 0 0 40px var(--eye-color), 0 0 10px rgba(255,255,255,0.5); transition: height 0.15s, transform 0.3s, background 0.3s; }
+        .eye.proud { transform: scale(1.15); box-shadow: 0 0 60px var(--eye-color); }
+        .eye.angry { transform: scaleY(0.4); opacity: 0.8; }
         .eye.blink { height: 1px !important; }
-        #mic-btn { position: fixed; bottom: 30px; width: 65px; height: 65px; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255,255,255,0.3); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 100; transition: 0.3s; }
-        #mic-btn.active { background: rgba(255,255,255,0.2); box-shadow: 0 0 20px white; }
+        #mic-btn { position: fixed; bottom: 40px; width: 65px; height: 65px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 100; transition: 0.3s; }
+        #mic-btn.active { background: rgba(255,255,255,0.15); box-shadow: 0 0 25px white; }
         @keyframes rumble { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } 100% { transform: translate(1px, 1px); } }
         .shake { animation: rumble 0.1s infinite; }
     </style>
@@ -36,11 +36,11 @@
 
         const eggs = {
             "purple": { msg: "¡Púrpura!", emo: "proud", run: () => { document.body.style.background = "#1a0033"; }},
-            "eren": { msg: "¡Retumbar!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
-            "sukuna": { msg: "Corte dimensional.", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:2px;background:white;position:absolute;top:50%;box-shadow:0 0 15px red;"></div>'; }},
+            "eren": { msg: "¡El Retumbar!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
+            "sukuna": { msg: "Corte dimensional.", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:2px;background:white;position:absolute;top:50%;box-shadow:0 0-15px red;"></div>'; }},
             "goku": { msg: "¡Kamehameha!", emo: "proud", run: () => { document.body.style.background = "#001122"; }},
-            "sharingan": { msg: "Te observo.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); }},
-            "matrix": { msg: "Veo el código.", emo: "proud", run: () => { document.body.style.background = "#020"; }},
+            "sharingan": { msg: "Sharingan.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); }},
+            "matrix": { msg: "Entrando en la red.", emo: "proud", run: () => { document.body.style.background = "#020"; }},
             "vegeta": { msg: "¡Insecto!", emo: "angry", run: () => { document.body.style.filter = "contrast(1.5)"; }},
             "luffy": { msg: "¡Gear Second!", emo: "proud", run: () => { document.body.style.filter = "brightness(1.5) saturate(1.5)"; }},
             "tanjiro": { msg: "Respiración de Agua.", emo: "proud", run: () => { document.body.style.background = "#004466"; }},
@@ -75,35 +75,14 @@
         function cleanText(t) { return t.replace(/[*#_~-]/g, ''); }
         function speak(t) { window.speechSynthesis.cancel(); const v = new SpeechSynthesisUtterance(cleanText(t)); v.lang = 'es-ES'; window.speechSynthesis.speak(v); }
 
-        function lookAround() {
-            if (!isListening) {
-                const x = (Math.random() * 30) - 15;
-                const y = (Math.random() * 15) - 7;
-                document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`;
-            }
-            setTimeout(lookAround, Math.random() * 3000 + 1000);
-        }
+        function lookAround() { if (!isListening) { const x = (Math.random()*24)-12; const y = (Math.random()*12)-6; document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`; } setTimeout(lookAround, Math.random()*4000+2000); }
         lookAround();
 
-        function naturalBlink() {
-            eyes.forEach(e => e.classList.add('blink'));
-            setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 120);
-            setTimeout(naturalBlink, Math.random() * 6000 + 1000);
-        }
+        function naturalBlink() { eyes.forEach(e => e.classList.add('blink')); setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 120); setTimeout(naturalBlink, Math.random()*6000+1500); }
         naturalBlink();
 
-        function handleInteraction(e) {
-            if (e.target.id === 'mic-btn' || isListening) return;
-            const p = prompt("Dime algo, chaval:");
-            if(p) runNova(p);
-        }
-
-        function toggleMic(e) {
-            e.stopPropagation();
-            if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); }
-            else { recognition.stop(); }
-        }
-
+        function handleInteraction(e) { if (e.target.id === 'mic-btn' || isListening) return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
+        function toggleMic(e) { e.stopPropagation(); if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } else { recognition.stop(); } }
         recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('active'); };
         recognition.onresult = (e) => { runNova(e.results[0][0].transcript); };
 
@@ -111,7 +90,7 @@
             const t = input.toLowerCase();
             const b = document.getElementById('bubble');
             const frame = document.getElementById('text-frame');
-            document.body.className = ""; document.body.style.background = "#000"; document.body.style.filter = "none";
+            document.body.className = ""; document.body.style.background = "#000"; document.body.style.filter = "none"; document.body.style.transform = "none";
             document.getElementById('fx-layer').innerHTML = "";
             eyes.forEach(e => {e.classList.remove('proud', 'angry'); e.style.background = "white";});
             
@@ -132,12 +111,12 @@
                 const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
                     headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
-                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova. Colega de Carlos (chaval). No uses asteriscos."}, {role:"user", content:input}] })
+                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova. Colega de Carlos (chaval). No uses asteriscos ni marcas de texto."}, {role:"user", content:input}] })
                 });
                 const data = await res.json();
                 const reply = data.choices[0].message.content;
                 b.innerText = reply; speak(reply);
-            } catch (e) { b.innerText = "Error de conexión, chaval."; }
+            } catch (e) { b.innerText = "Error, chaval."; }
         }
     </script>
 </body>
