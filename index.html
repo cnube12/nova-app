@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM - FULL LEGACY</title>
+    <title>NOVA PLATINUM - TOTAL GOLDEN</title>
     <style>
         :root { --eye-size: 220px; --nova-white: #ffffff; }
         body { 
@@ -57,21 +57,19 @@
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'es-ES';
 
-        // --- SISTEMA DE EMOCIONES COMPLETO ---
         function setEmotion(mode) {
             if (mode === 'thinking') {
-                face.style.transform = "scale(0.9) translateY(20px)";
-                eyes.forEach(e => { e.style.opacity = "0.5"; e.style.boxShadow = "0 0 40px white"; });
+                face.style.transform = "scale(0.85) translateY(20px)";
+                eyes.forEach(e => { e.style.opacity = "0.5"; e.style.boxShadow = "0 0 30px white"; });
             } else if (mode === 'speaking') {
-                face.style.transform = "scale(1.1)";
-                eyes.forEach(e => e.style.boxShadow = "0 0 100px white, 0 0 200px rgba(255,255,255,0.4)");
+                face.style.transform = "scale(1.15)";
+                eyes.forEach(e => e.style.boxShadow = "0 0 120px white, 0 0 240px rgba(255,255,255,0.4)");
             } else {
                 face.style.transform = "none";
                 eyes.forEach(e => { e.style.opacity = "1"; e.style.boxShadow = "0 0 80px white, 0 0 160px rgba(255,255,255,0.3)"; });
             }
         }
 
-        // --- LOS 35+ EASTER EGGS (RESTURADOS 100%) ---
         const eggs = {
             "purple": { msg: "¡Vacío Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 120px #a020f0"); }},
             "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('shake'); }},
@@ -79,22 +77,21 @@
             "zenitsu": { msg: "¡Trueno!", run: () => { document.body.style.background = "yellow"; setTimeout(resetStyles, 500); }},
             "matrix": { msg: "Entrando en la red...", run: () => { document.body.style.background = "#020"; eyes.forEach(e => e.style.borderRadius = "15px"); }},
             "itachi": { msg: "Genjutsu.", run: () => { document.body.style.filter = "blur(15px) grayscale(1)"; }},
-            "saitama": { msg: "Un puñetazo.", run: () => { eyes.forEach(e => e.style.transform = "scale(1.6)"); document.body.style.background="#700"; }},
-            "sukuna": { msg: "Expansión de Dominio.", run: () => { document.body.style.filter = "invert(1)"; }},
+            "saitama": { msg: "Un puñetazo.", run: () => { eyes.forEach(e => e.style.transform = "scale(1.7)"); document.body.style.background="#700"; }},
+            "sukuna": { msg: "Corte dimensional.", run: () => { document.body.style.filter = "invert(1)"; }},
             "goku": { msg: "¡Kamehameha!", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 150px #0ff"); }},
             "naruto": { msg: "¡Dattebayo!", run: () => { document.body.style.background = "#ff4500"; }},
-            "one piece": { msg: "¡El One Piece existe!", run: () => { document.body.style.background = "gold"; }},
             "zoro": { msg: "¿Dónde estoy?", run: () => { document.body.style.transform = "rotate(25deg) scale(0.8)"; }},
             "jojo": { msg: "¡Muda Muda Muda!", run: () => { document.body.style.filter = "contrast(2.5) invert(1)"; }},
             "deku": { msg: "¡Detroit Smash!", run: () => { document.body.style.boxShadow = "inset 0 0 150px #0f0"; }},
-            "rimuru": { msg: "Analizando...", run: () => { eyes.forEach(e => e.style.borderRadius = "30% 70% 70% 30% / 30% 30% 70% 70%"); }},
-            "asta": { msg: "¡Corte de Anti-magia!", run: () => { eyes.forEach(e => e.style.background = "#333"); document.body.style.background = "#111"; }},
-            "easter egg": { msg: "Siempre los recuerdo, chaval.", run: () => { console.log("Easter eggs activos."); }}
+            "rimuru": { msg: "Modo Depredador.", run: () => { eyes.forEach(e => e.style.borderRadius = "30% 70% 70% 30% / 30% 30% 70% 70%"); }},
+            "asta": { msg: "¡Anti-magia!", run: () => { eyes.forEach(e => e.style.background = "#222"); document.body.style.background = "#111"; }},
+            "easter egg": { msg: "Todo guardado en mi núcleo, chaval.", run: () => { console.log("Memory loaded."); }}
         };
 
         function resetStyles() {
             document.body.style = ""; document.body.className = ""; face.style.transform = "none";
-            eyes.forEach(e => { e.style = ""; e.style.background = "var(--nova-white)"; e.style.opacity = "1"; });
+            eyes.forEach(e => { e.style = ""; e.style.background = "white"; e.style.opacity = "1"; });
         }
 
         function speak(t) {
@@ -105,18 +102,16 @@
             v.lang = 'es-ES'; window.speechSynthesis.speak(v);
         }
 
-        // Parpadeo característico (220px)
         setInterval(() => {
             eyes.forEach(e => e.style.height = "5px");
             setTimeout(() => eyes.forEach(e => e.style.height = "220px"), 150);
         }, 5500);
 
-        function handleInteraction(e) { if (e.target.id === 'mic-btn') return; const p = prompt("Nova Platinium, dime:"); if(p) runNova(p); }
+        function handleInteraction(e) { if (e.target.id === 'mic-btn') return; const p = prompt("Nova Platinum:"); if(p) runNova(p); }
         function toggleMic(e) { e.stopPropagation(); try { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } catch(e) {} }
         recognition.onend = () => document.getElementById('mic-btn').classList.remove('active');
         recognition.onresult = (e) => runNova(e.results[0][0].transcript);
 
-        // --- MOTOR DE IA SIN BLOQUEOS ---
         async function runNova(input) {
             const b = document.getElementById('bubble'); 
             const frame = document.getElementById('text-frame');
@@ -128,7 +123,7 @@
                 }
             }
 
-            b.innerText = "Procesando...";
+            b.innerText = "Sincronizando...";
             frame.classList.add('visible');
             setEmotion('thinking');
             
@@ -142,7 +137,7 @@
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Sé muy breve, directo y vacila un poco. No uses asteriscos."},
+                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Muy breve, vacila un poco. No uses asteriscos."},
                             {role: "user", content: input}
                         ]
                     })
@@ -150,17 +145,13 @@
 
                 const data = await response.json();
                 setEmotion('normal');
-                
                 if (data.choices && data.choices[0]) {
                     const reply = data.choices[0].message.content;
-                    b.innerText = reply;
-                    speak(reply);
-                } else {
-                    throw new Error();
+                    b.innerText = reply; speak(reply);
                 }
             } catch (e) { 
                 setEmotion('normal');
-                b.innerText = "Error crítico, chaval. Revisa tu conexión.";
+                b.innerText = "Error crítico, chaval. Refresca y dale caña.";
             }
         }
     </script>
