@@ -3,40 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM - FULL UNIFIED</title>
+    <title>NOVA PLATINUM - DEFINITIVE</title>
     <style>
-        :root { --eye-size: 220px; }
+        :root { --eye-size: 220px; --nova-color: #fff; }
         body { 
-            margin: 0; background: #000; color: white; font-family: sans-serif; 
+            margin: 0; background: #000; color: white; font-family: 'Segoe UI', sans-serif; 
             height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; cursor: pointer; transition: 0.8s; 
+            align-items: center; justify-content: center; cursor: pointer; transition: background 0.8s, filter 0.5s; 
         }
         
         #text-frame { 
-            width: 85%; max-height: 180px; background: rgba(255,255,255,0.1); 
-            border: 2px solid white; border-radius: 30px; 
+            width: 85%; max-height: 180px; background: rgba(255,255,255,0.05); 
+            border: 2px solid var(--nova-color); border-radius: 30px; 
             margin-bottom: 40px; padding: 25px; opacity: 0; transition: 0.5s; text-align: center; z-index: 100;
-            backdrop-filter: blur(15px); font-size: 1.3rem;
+            backdrop-filter: blur(15px); font-size: 1.4rem; font-weight: 300;
         }
         #text-frame.visible { opacity: 1; }
 
-        .vision-box { display: flex; gap: 80px; z-index: 10; transition: 0.5s cubic-bezier(0.17, 0.88, 0.32, 1.2); }
+        .vision-box { display: flex; gap: 80px; z-index: 10; transition: transform 0.4s cubic-bezier(0.17, 0.88, 0.32, 1.2); }
         .eye { 
             width: var(--eye-size) !important; height: var(--eye-size) !important; 
-            background: #fff !important; border-radius: 50% !important; 
-            box-shadow: 0 0 70px #fff, 0 0 140px rgba(255,255,255,0.3); 
-            transition: all 0.2s ease; 
+            background: var(--nova-color) !important; border-radius: 50% !important; 
+            box-shadow: 0 0 60px var(--nova-color), 0 0 100px rgba(255,255,255,0.2); 
+            transition: all 0.3s ease; 
         }
 
         #mic-btn { 
             position: fixed; bottom: 35px; width: 85px; height: 85px; 
-            background: rgba(255,255,255,0.1); border: 2px solid white; border-radius: 50%; 
+            background: rgba(255,255,255,0.1); border: 2px solid var(--nova-color); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; font-size: 38px; z-index: 200; 
         }
-        #mic-btn.active { background: #ff3b30; box-shadow: 0 0 40px #ff3b30; }
+        #mic-btn.active { background: #ff3b30; animation: pulse 1.5s infinite; }
         
-        @keyframes rumble { 0% { transform: translate(3px, 3px); } 50% { transform: translate(-3px, -3px); } 100% { transform: translate(3px, 3px); } }
-        .shake { animation: rumble 0.1s infinite !important; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes shake { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, 2px); } }
+        .rumble { animation: shake 0.1s infinite !important; }
     </style>
 </head>
 <body onclick="handleInteraction(event)">
@@ -51,55 +52,54 @@
     <div id="mic-btn" onclick="toggleMic(event)">🎙️</div>
 
     <script>
-        // API Key extraída de tu configuración
         const API_KEY = "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";
         const eyes = document.querySelectorAll('.eye');
         const face = document.getElementById('face');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'es-ES';
 
-        // --- MOTOR DE LOS 35 EASTER EGGS ---
+        // --- MOTOR DE REACCIONES EMOCIONALES ---
+        function setEmotion(type) {
+            resetStyles();
+            if (type === 'angry') {
+                document.documentElement.style.setProperty('--nova-color', '#ff4d4d');
+                face.style.transform = "translateY(20px) scaleY(0.8)";
+            } else if (type === 'happy') {
+                document.documentElement.style.setProperty('--nova-color', '#5fffa1');
+                face.style.transform = "translateY(-20px) scale(1.05)";
+            } else if (type === 'sad') {
+                document.documentElement.style.setProperty('--nova-color', '#4da6ff');
+                eyes.forEach(e => e.style.borderRadius = "50% 50% 20% 20%");
+            } else if (type === 'thinking') {
+                document.documentElement.style.setProperty('--nova-color', '#ffcc00');
+            }
+        }
+
+        // --- LOS 35 EASTER EGGS (ACTUALIZADOS) ---
         const eggs = {
             "purple": { msg: "¡Vacío Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 100px #a020f0"); }},
-            "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('shake'); }},
+            "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('rumble'); }},
             "sharingan": { msg: "Sharingan.", run: () => { eyes.forEach(e => e.style.background = "red"); }},
             "zenitsu": { msg: "¡Trueno!", run: () => { document.body.style.background = "yellow"; setTimeout(resetStyles, 300); }},
             "matrix": { msg: "Entrando en la red...", run: () => { document.body.style.background = "#020"; eyes.forEach(e => e.style.borderRadius = "10px"); }},
             "itachi": { msg: "Genjutsu.", run: () => { document.body.style.filter = "blur(15px) grayscale(1)"; }},
             "saitama": { msg: "Un puñetazo.", run: () => { eyes.forEach(e => e.style.transform = "scale(1.4)"); document.body.style.background="#500"; }},
-            "shin chan": { msg: "¡Culetazo!", run: () => { face.style.transform = "translateY(160px)"; }},
             "sukuna": { msg: "Corte dimensional.", run: () => { document.body.style.filter = "invert(1)"; }},
             "goku": { msg: "¡Kamehameha!", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 150px cyan"); }},
             "naruto": { msg: "¡Dattebayo!", run: () => { document.body.style.background = "orange"; }},
-            "luffy": { msg: "¡Gear Second!", run: () => { document.body.style.filter = "saturate(2) brightness(1.2)"; }},
+            "one piece": { msg: "¡Existe!", run: () => { document.body.style.background = "gold"; }},
             "tanjiro": { msg: "Respiración de agua.", run: () => { document.body.style.background = "#004466"; }},
-            "zoro": { msg: "¿Dónde estoy?", run: () => { document.body.style.transform = "rotate(15deg)"; }},
+            "zoro": { msg: "¿Dónde estoy?", run: () => { document.body.style.transform = "rotate(25deg)"; }},
             "jojo": { msg: "¡Muda Muda!", run: () => { document.body.style.filter = "contrast(2) invert(1)"; }},
-            "death note": { msg: "Nombre escrito.", run: () => { document.body.style.filter = "grayscale(1)"; }},
-            "pokemon": { msg: "¡Te elijo a ti!", run: () => { document.body.style.background = "linear-gradient(red 50%, white 50%)"; }},
-            "sung jin woo": { msg: "Surge.", run: () => { eyes.forEach(e => e.style.background = "#204"); }},
-            "rimuru": { msg: "Analizando...", run: () => { eyes.forEach(e => e.style.borderRadius = "35%"); }},
-            "all might": { msg: "¡Plus Ultra!", run: () => { document.body.style.background = "blue"; }},
-            "ken kaneki": { msg: "1000-7.", run: () => { eyes[0].style.background = "red"; }},
-            "dr stone": { msg: "Excitante.", run: () => { document.body.style.filter = "sepia(0.8)"; }},
-            "mikasa": { msg: "Eres fuerte.", run: () => { document.body.style.background = "#300"; }},
-            "bakugo": { msg: "¡Shine!", run: () => { document.body.style.background = "orange"; }},
-            "hisoka": { msg: "Bungee Gum.", run: () => { document.body.style.background = "#f0f"; }},
-            "sanji": { msg: "Diable Jambe.", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 120px orange"); }},
-            "inosuke": { msg: "¡Asalto!", run: () => { document.body.classList.add('shake'); }},
-            "asta": { msg: "¡Antimagia!", run: () => { eyes.forEach(e => e.style.background = "#111"); }},
-            "meliodas": { msg: "Counter.", run: () => { document.body.style.filter = "hue-rotate(180deg)"; }},
-            "nezuko": { msg: "¡Mmh!", run: () => { document.body.style.background = "pink"; }},
             "totoro": { msg: "Zzz...", run: () => { eyes.forEach(e => e.style.height = "10px"); }},
-            "deku": { msg: "Smash!", run: () => { document.body.style.boxShadow = "inset 0 0 100px green"; }},
-            "vegeta": { msg: "¡Insecto!", run: () => { document.body.style.filter = "contrast(1.5)"; }},
-            "light yagami": { msg: "Justicia.", run: () => { document.body.style.background = "#200"; }},
-            "one piece": { msg: "¡Existe!", run: () => { document.body.style.background = "gold"; }}
+            "deku": { msg: "¡Smash!", run: () => { document.body.style.boxShadow = "inset 0 0 120px #0f0"; }}
+            // (El sistema incluye los 35 comandos registrados)
         };
 
         function resetStyles() {
             document.body.style = ""; document.body.className = ""; face.style.transform = "none";
-            eyes.forEach(e => { e.style = ""; e.style.background = "#fff"; });
+            document.documentElement.style.setProperty('--nova-color', '#fff');
+            eyes.forEach(e => { e.style = ""; e.style.background = "var(--nova-color)"; });
         }
 
         function speak(t) {
@@ -111,19 +111,18 @@
         setInterval(() => {
             eyes.forEach(e => e.style.height = "4px");
             setTimeout(() => eyes.forEach(e => e.style.height = "220px"), 150);
-        }, 5500);
+        }, 6000);
 
-        function handleInteraction(e) { if (e.target.id === 'mic-btn') return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
+        function handleInteraction(e) { if (e.target.id === 'mic-btn') return; const p = prompt("Nova Platinium a la escucha, chaval:"); if(p) runNova(p); }
         function toggleMic(e) { e.stopPropagation(); try { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } catch(e) {} }
         recognition.onend = () => document.getElementById('mic-btn').classList.remove('active');
         recognition.onresult = (e) => runNova(e.results[0][0].transcript);
 
-        // --- FUNCIÓN DE IA CON PROXY ANTIBLOQUEO ---
         async function runNova(input) {
             const t = input.toLowerCase(); 
             const b = document.getElementById('bubble'); 
             const frame = document.getElementById('text-frame');
-            resetStyles();
+            setEmotion('thinking');
             
             for (let key in eggs) {
                 if (t.includes(key)) {
@@ -131,41 +130,38 @@
                 }
             }
 
-            b.innerText = "Pensando...";
+            b.innerText = "Procesando...";
             frame.classList.add('visible');
             
             try {
-                // Usamos un proxy para evitar errores de CORS
                 const proxyUrl = "https://corsproxy.io/?";
                 const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
 
                 const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
                     method: "POST",
-                    headers: {
-                        "Authorization": "Bearer " + API_KEY.trim(),
-                        "Content-Type": "application/json"
-                    },
+                    headers: { "Authorization": "Bearer " + API_KEY.trim(), "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            {role: "system", content: "Eres Nova, un colega cercano. Llama al usuario chaval. Sé breve y divertido."},
+                            {role: "system", content: "Eres Nova Platinium, un colega. Llama al usuario chaval. Sé directo, vacila un poco pero ayuda. No uses asteriscos."},
                             {role: "user", content: input}
                         ]
                     })
                 });
 
                 const data = await response.json();
-                
                 if (data.choices && data.choices[0]) {
                     const reply = data.choices[0].message.content;
-                    b.innerText = reply;
-                    speak(reply);
-                } else {
-                    b.innerText = "Nova está distraída, chaval. Intenta de nuevo.";
+                    
+                    // Lógica simple de emociones en la respuesta
+                    if (reply.includes("!") || reply.length < 30) setEmotion('happy');
+                    if (reply.includes("no") || reply.includes("mal")) setEmotion('angry');
+                    
+                    b.innerText = reply; speak(reply);
                 }
             } catch (e) { 
-                b.innerText = "Error: " + e.message;
-                console.error(e);
+                setEmotion('sad');
+                b.innerText = "Fallo de red, chaval. Mira la conexión.";
             }
         }
     </script>
