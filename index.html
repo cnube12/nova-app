@@ -3,20 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM - ULTIMATE</title>
+    <title>NOVA PLATINUM - GOLDEN LEGACY</title>
     <style>
         :root { --eye-size: 220px; --nova-white: #ffffff; }
         body { 
-            margin: 0; background: #000; color: white; font-family: 'Segoe UI', Roboto, sans-serif; 
+            margin: 0; background: #000; color: white; font-family: 'Segoe UI', sans-serif; 
             height: 100vh; overflow: hidden; display: flex; flex-direction: column; 
             align-items: center; justify-content: center; cursor: pointer; transition: 0.5s; 
         }
         
         #text-frame { 
-            width: 85%; max-height: 200px; background: rgba(255,255,255,0.08); 
+            width: 85%; max-height: 180px; background: rgba(255,255,255,0.08); 
             border: 2px solid var(--nova-white); border-radius: 30px; 
             margin-bottom: 40px; padding: 25px; opacity: 0; transition: 0.5s; text-align: center; z-index: 100;
-            backdrop-filter: blur(20px); font-size: 1.4rem; overflow-y: auto;
+            backdrop-filter: blur(15px); font-size: 1.4rem;
         }
         #text-frame.visible { opacity: 1; }
 
@@ -24,7 +24,7 @@
         .eye { 
             width: var(--eye-size) !important; height: var(--eye-size) !important; 
             background: var(--nova-white) !important; border-radius: 50% !important; 
-            box-shadow: 0 0 80px var(--nova-white), 0 0 160px rgba(255,255,255,0.3); 
+            box-shadow: 0 0 75px var(--nova-white), 0 0 150px rgba(255,255,255,0.2); 
             transition: all 0.3s ease; 
         }
 
@@ -33,9 +33,9 @@
             background: rgba(255,255,255,0.1); border: 2px solid var(--nova-white); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; font-size: 38px; z-index: 200; 
         }
-        #mic-btn.active { background: rgba(255,255,255,0.3); box-shadow: 0 0 40px var(--nova-white); transform: scale(1.1); }
+        #mic-btn.active { background: rgba(255,255,255,0.3); box-shadow: 0 0 30px var(--nova-white); }
         
-        @keyframes rumble { 0% { transform: translate(3px, 3px); } 50% { transform: translate(-3px, -3px); } 100% { transform: translate(3px, 3px); } }
+        @keyframes rumble { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, 2px); } }
         .shake { animation: rumble 0.1s infinite !important; }
     </style>
 </head>
@@ -51,13 +51,28 @@
     <div id="mic-btn" onclick="toggleMic(event)">🎙️</div>
 
     <script>
+        // API Key extraída de tu captura
         const API_KEY = "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";
         const eyes = document.querySelectorAll('.eye');
         const face = document.getElementById('face');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'es-ES';
 
-        // --- MOTOR DE LOS 35 EASTER EGGS ---
+        // --- SISTEMA DE REACCIONES Y EMOCIONES ---
+        function setEmotion(type) {
+            if (type === 'thinking') {
+                face.style.transform = "scale(0.95)";
+                eyes.forEach(e => e.style.opacity = "0.7");
+            } else if (type === 'speaking') {
+                face.style.transform = "scale(1.05)";
+                eyes.forEach(e => e.style.opacity = "1");
+            } else {
+                face.style.transform = "none";
+                eyes.forEach(e => e.style.opacity = "1");
+            }
+        }
+
+        // --- MOTOR DE EASTER EGGS COMPLETO ---
         const eggs = {
             "purple": { msg: "¡Vacío Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 100px #a020f0"); }},
             "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('shake'); }},
@@ -79,12 +94,14 @@
 
         function resetStyles() {
             document.body.style = ""; document.body.className = ""; face.style.transform = "none";
-            eyes.forEach(e => { e.style = ""; e.style.background = "var(--nova-white)"; });
+            eyes.forEach(e => { e.style = ""; e.style.background = "var(--nova-white)"; e.style.opacity = "1"; });
         }
 
         function speak(t) {
             window.speechSynthesis.cancel();
             const v = new SpeechSynthesisUtterance(t);
+            v.onstart = () => setEmotion('speaking');
+            v.onend = () => setEmotion('normal');
             v.lang = 'es-ES'; window.speechSynthesis.speak(v);
         }
 
@@ -98,31 +115,29 @@
         recognition.onend = () => document.getElementById('mic-btn').classList.remove('active');
         recognition.onresult = (e) => runNova(e.results[0][0].transcript);
 
-        // --- CÓDIGO DE IA BLINDADO ---
+        // --- FUNCIÓN IA ANTIBLOQUEO ---
         async function runNova(input) {
             const b = document.getElementById('bubble'); 
             const frame = document.getElementById('text-frame');
             resetStyles();
             
-            // Comprobar Easter Eggs primero
             for (let key in eggs) {
                 if (input.toLowerCase().includes(key)) {
                     eggs[key].run(); b.innerText = eggs[key].msg; frame.classList.add('visible'); speak(eggs[key].msg); return;
                 }
             }
 
-            b.innerText = "Conectando con Nova...";
+            b.innerText = "Pensando...";
             frame.classList.add('visible');
+            setEmotion('thinking');
             
-            // Sistema de Aborto si tarda más de 10 segundos
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), 10000);
-
             try {
-                // Intentamos llamada directa (más rápida)
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                // Usamos un proxy de respaldo para evitar errores de red
+                const proxyUrl = "https://corsproxy.io/?";
+                const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
+
+                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
                     method: "POST",
-                    signal: controller.signal,
                     headers: {
                         "Authorization": "Bearer " + API_KEY.trim(),
                         "Content-Type": "application/json"
@@ -130,13 +145,12 @@
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Sé breve, directo y vacila un poco."},
+                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Sé breve y directo."},
                             {role: "user", content: input}
                         ]
                     })
                 });
 
-                clearTimeout(timeoutId);
                 const data = await response.json();
                 
                 if (data.choices && data.choices[0]) {
@@ -144,33 +158,11 @@
                     b.innerText = reply;
                     speak(reply);
                 } else {
-                    throw new Error("Formato inválido");
+                    b.innerText = "Fallo en la matriz, chaval.";
                 }
-
-            } catch (e) {
-                // Si falla la directa, intentamos vía PROXY automáticamente
-                console.log("Reintentando vía túnel...");
-                try {
-                    const proxyUrl = "https://corsproxy.io/?";
-                    const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
-                    const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
-                        method: "POST",
-                        headers: {
-                            "Authorization": "Bearer " + API_KEY.trim(),
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            model: "llama-3.3-70b-versatile",
-                            messages: [{role: "system", content: "Eres Nova. Llama al usuario chaval."}, {role: "user", content: input}]
-                        })
-                    });
-                    const data = await response.json();
-                    const reply = data.choices[0].message.content;
-                    b.innerText = reply;
-                    speak(reply);
-                } catch (err) {
-                    b.innerText = "Error crítico, chaval. Revisa tu API Key o conexión.";
-                }
+            } catch (e) { 
+                b.innerText = "Error crítico, chaval. Revisa tu API Key o conexión.";
+                console.error(e);
             }
         }
     </script>
