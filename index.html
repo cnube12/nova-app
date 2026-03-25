@@ -3,22 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA PLATINUM - FINAL FIX</title>
+    <title>NOVA PLATINUM - FULL VERSION</title>
     <style>
         :root { --eye-size: 220px; }
-        body { margin: 0; background: #000; color: white; font-family: sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.5s; }
-        #text-frame { width: 85%; max-height: 150px; background: rgba(255,255,255,0.08); border: 2px solid white; border-radius: 25px; margin-bottom: 30px; padding: 20px; opacity: 0; transition: 0.5s; text-align: center; z-index: 100; backdrop-filter: blur(15px); }
+        body { margin: 0; background: #000; color: white; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        
+        #text-frame { 
+            width: 85%; max-height: 180px; background: rgba(255,255,255,0.08); 
+            border: 2px solid rgba(255,255,255,0.3); border-radius: 30px; 
+            margin-bottom: 40px; padding: 25px; opacity: 0; transition: 0.5s; text-align: center; z-index: 100;
+            backdrop-filter: blur(15px); font-size: 1.2rem; line-height: 1.4;
+        }
         #text-frame.visible { opacity: 1; }
-        .vision-box { display: flex; gap: 80px; z-index: 10; transition: 0.5s; }
-        .eye { width: var(--eye-size) !important; height: var(--eye-size) !important; background: #fff !important; border-radius: 50% !important; box-shadow: 0 0 80px #fff, 0 0 140px rgba(255,255,255,0.3); transition: all 0.2s ease; }
-        #mic-btn { position: fixed; bottom: 30px; width: 80px; height: 80px; background: rgba(255,255,255,0.1); border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 35px; z-index: 200; }
-        @keyframes rumble { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-3px, -2px); } 100% { transform: translate(2px, 2px); } }
+
+        .vision-box { display: flex; gap: 80px; z-index: 10; transition: 0.5s cubic-bezier(0.17, 0.88, 0.32, 1.2); }
+        
+        .eye { 
+            width: var(--eye-size) !important; height: var(--eye-size) !important; 
+            background: #fff !important; border-radius: 50% !important; 
+            box-shadow: 0 0 70px #fff, 0 0 120px rgba(255,255,255,0.2); 
+            transition: all 0.3s ease; 
+        }
+
+        #mic-btn { position: fixed; bottom: 35px; width: 85px; height: 85px; background: rgba(255,255,255,0.1); border: 2px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 38px; z-index: 200; transition: 0.3s; }
+        #mic-btn.active { background: #ff3b30; box-shadow: 0 0 40px #ff3b30; transform: scale(1.1); }
+        
+        @keyframes rumble { 0% { transform: translate(3px, 3px); } 50% { transform: translate(-3px, -3px); } 100% { transform: translate(3px, 3px); } }
         .shake { animation: rumble 0.1s infinite !important; }
     </style>
 </head>
 <body onclick="handleInteraction(event)">
+
     <div id="text-frame"><div id="bubble"></div></div>
-    <div class="vision-box" id="face"><div class="eye"></div><div class="eye"></div></div>
+    
+    <div class="vision-box" id="face">
+        <div class="eye" id="l-eye"></div>
+        <div class="eye" id="r-eye"></div>
+    </div>
+
     <div id="mic-btn" onclick="toggleMic(event)">🎙️</div>
 
     <script>
@@ -28,21 +50,43 @@
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'es-ES';
 
-        // MOTOR DE LOS 35 EGGS (Resumido para el código, pero funcional)
+        // --- MOTOR DE LOS 35 EASTER EGGS ---
         const eggs = {
-            "purple": { msg: "¡Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 100px #a020f0"); }},
-            "eren": { msg: "¡Retumbar!", run: () => { document.body.classList.add('shake'); }},
+            "purple": { msg: "¡Vacío Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 100px #a020f0"); }},
+            "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('shake'); }},
             "sharingan": { msg: "Sharingan.", run: () => { eyes.forEach(e => e.style.background = "red"); }},
             "zenitsu": { msg: "¡Trueno!", run: () => { document.body.style.background = "yellow"; setTimeout(resetStyles, 300); }},
             "matrix": { msg: "Entrando en la red...", run: () => { document.body.style.background = "#020"; eyes.forEach(e => e.style.borderRadius = "10px"); }},
-            "saitama": { msg: "Un puñetazo.", run: () => { eyes.forEach(e => e.style.transform = "scale(1.4)"); }},
-            "shin chan": { msg: "¡Culetazo!", run: () => { face.style.transform = "translateY(150px)"; }},
+            "itachi": { msg: "Genjutsu.", run: () => { document.body.style.filter = "blur(15px) grayscale(1)"; }},
+            "saitama": { msg: "Un puñetazo.", run: () => { eyes.forEach(e => e.style.transform = "scale(1.4)"); document.body.style.background="#500"; }},
+            "shin chan": { msg: "¡Culetazo!", run: () => { face.style.transform = "translateY(160px)"; }},
+            "sukuna": { msg: "Corte.", run: () => { document.body.style.filter = "invert(1)"; }},
             "goku": { msg: "¡Kamehameha!", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 150px cyan"); }},
             "naruto": { msg: "¡Dattebayo!", run: () => { document.body.style.background = "orange"; }},
-            "luffy": { msg: "¡Gear Second!", run: () => { document.body.style.filter = "saturate(2)"; }},
-            "sukuna": { msg: "Corte.", run: () => { document.body.style.filter = "invert(1)"; }},
-            "itachi": { msg: "Genjutsu.", run: () => { document.body.style.filter = "blur(10px)"; }}
-            // ... (el sistema procesa los 35 comandos)
+            "luffy": { msg: "¡Gear Second!", run: () => { document.body.style.filter = "saturate(2) brightness(1.2)"; }},
+            "tanjiro": { msg: "Respiración de agua.", run: () => { document.body.style.background = "#004466"; }},
+            "zoro": { msg: "¿Dónde estoy?", run: () => { document.body.style.transform = "rotate(15deg)"; }},
+            "jojo": { msg: "¡Muda Muda!", run: () => { document.body.style.filter = "contrast(2) invert(1)"; }},
+            "death note": { msg: "Nombre escrito.", run: () => { document.body.style.filter = "grayscale(1)"; }},
+            "pokemon": { msg: "¡Te elijo a ti!", run: () => { document.body.style.background = "linear-gradient(red 50%, white 50%)"; }},
+            "sung jin woo": { msg: "Surge.", run: () => { eyes.forEach(e => e.style.background = "#204"); }},
+            "rimuru": { msg: "Analizando...", run: () => { eyes.forEach(e => e.style.borderRadius = "35%"); }},
+            "all might": { msg: "¡Plus Ultra!", run: () => { document.body.style.background = "blue"; }},
+            "ken kaneki": { msg: "1000-7.", run: () => { eyes[0].style.background = "red"; }},
+            "dr stone": { msg: "Excitante.", run: () => { document.body.style.filter = "sepia(0.8)"; }},
+            "mikasa": { msg: "Eres fuerte.", run: () => { document.body.style.background = "#300"; }},
+            "bakugo": { msg: "¡Shine!", run: () => { document.body.style.background = "orange"; }},
+            "hisoka": { msg: "Bungee Gum.", run: () => { document.body.style.background = "#f0f"; }},
+            "sanji": { msg: "Diable Jambe.", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 120px orange"); }},
+            "inosuke": { msg: "¡Asalto!", run: () => { document.body.classList.add('shake'); }},
+            "asta": { msg: "¡Antimagia!", run: () => { eyes.forEach(e => e.style.background = "#111"); }},
+            "meliodas": { msg: "Counter.", run: () => { document.body.style.filter = "hue-rotate(180deg)"; }},
+            "nezuko": { msg: "¡Mmh!", run: () => { document.body.style.background = "pink"; }},
+            "totoro": { msg: "Zzz...", run: () => { eyes.forEach(e => e.style.height = "10px"); }},
+            "deku": { msg: "Smash!", run: () => { document.body.style.boxShadow = "inset 0 0 100px green"; }},
+            "vegeta": { msg: "¡Insecto!", run: () => { document.body.style.filter = "contrast(1.5)"; }},
+            "light yagami": { msg: "Justicia.", run: () => { document.body.style.background = "#200"; }},
+            "one piece": { msg: "¡Existe!", run: () => { document.body.style.background = "gold"; }}
         };
 
         function resetStyles() {
@@ -56,18 +100,27 @@
             v.lang = 'es-ES'; window.speechSynthesis.speak(v);
         }
 
+        // Parpadeo automático
+        setInterval(() => {
+            eyes.forEach(e => e.style.height = "4px");
+            setTimeout(() => eyes.forEach(e => e.style.height = "220px"), 150);
+        }, 5500);
+
         function handleInteraction(e) { if (e.target.id === 'mic-btn') return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
-        function toggleMic(e) { e.stopPropagation(); recognition.start(); }
+        function toggleMic(e) { e.stopPropagation(); try { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } catch(e) {} }
+        recognition.onend = () => document.getElementById('mic-btn').classList.remove('active');
         recognition.onresult = (e) => runNova(e.results[0][0].transcript);
 
         async function runNova(input) {
             const t = input.toLowerCase(); const b = document.getElementById('bubble'); const frame = document.getElementById('text-frame');
             resetStyles();
+            
             for (let key in eggs) {
                 if (t.includes(key)) {
                     eggs[key].run(); b.innerText = eggs[key].msg; frame.classList.add('visible'); speak(eggs[key].msg); return;
                 }
             }
+
             b.innerText = "Pensando..."; frame.classList.add('visible');
             
             try {
@@ -75,25 +128,25 @@
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": "Bearer " + API_KEY
+                        "Authorization": "Bearer " + API_KEY.trim()
                     },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{role: "system", content: "Eres Nova, un colega. Llama al usuario chaval."}, {role: "user", content: input}]
+                        messages: [{role: "system", content: "Eres Nova, un colega. Llama al usuario chaval. No uses asteriscos ni lenguaje formal."}, {role: "user", content: input}]
                     })
                 });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error.message || "Error desconocido");
-                }
-
                 const data = await response.json();
-                const reply = data.choices[0].message.content;
-                b.innerText = reply; speak(reply);
+                
+                if (!response.ok) {
+                    b.innerText = "Error: " + (data.error ? data.error.message : "Fallo de API");
+                } else {
+                    const reply = data.choices[0].message.content;
+                    b.innerText = reply; speak(reply);
+                }
             } catch (e) { 
+                b.innerText = "Error de red: " + e.message; 
                 console.error(e);
-                b.innerText = "Fallo de IA, chaval. Error: " + e.message; 
             }
         }
     </script>
