@@ -16,7 +16,7 @@
             width: 85%; max-height: 180px; background: rgba(255,255,255,0.08); 
             border: 2px solid var(--nova-white); border-radius: 30px; 
             margin-bottom: 40px; padding: 25px; opacity: 0; transition: 0.5s; text-align: center; z-index: 100;
-            backdrop-filter: blur(15px); font-size: 1.4rem;
+            backdrop-filter: blur(15px); font-size: 1.4rem; box-shadow: 0 0 20px rgba(255,255,255,0.1);
         }
         #text-frame.visible { opacity: 1; }
 
@@ -24,7 +24,7 @@
         .eye { 
             width: var(--eye-size) !important; height: var(--eye-size) !important; 
             background: var(--nova-white) !important; border-radius: 50% !important; 
-            box-shadow: 0 0 75px var(--nova-white), 0 0 150px rgba(255,255,255,0.2); 
+            box-shadow: 0 0 80px var(--nova-white), 0 0 160px rgba(255,255,255,0.3); 
             transition: all 0.3s ease; 
         }
 
@@ -33,9 +33,9 @@
             background: rgba(255,255,255,0.1); border: 2px solid var(--nova-white); border-radius: 50%; 
             display: flex; align-items: center; justify-content: center; font-size: 38px; z-index: 200; 
         }
-        #mic-btn.active { background: rgba(255,255,255,0.3); box-shadow: 0 0 30px var(--nova-white); }
+        #mic-btn.active { background: rgba(255,255,255,0.3); box-shadow: 0 0 40px var(--nova-white); }
         
-        @keyframes rumble { 0% { transform: translate(2px, 2px); } 50% { transform: translate(-2px, -2px); } 100% { transform: translate(2px, 2px); } }
+        @keyframes rumble { 0% { transform: translate(3px, 3px); } 50% { transform: translate(-3px, -3px); } 100% { transform: translate(3px, 3px); } }
         .shake { animation: rumble 0.1s infinite !important; }
     </style>
 </head>
@@ -51,28 +51,24 @@
     <div id="mic-btn" onclick="toggleMic(event)">🎙️</div>
 
     <script>
-        // API Key extraída de tu captura
         const API_KEY = "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";
         const eyes = document.querySelectorAll('.eye');
         const face = document.getElementById('face');
         const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'es-ES';
 
-        // --- SISTEMA DE REACCIONES Y EMOCIONES ---
-        function setEmotion(type) {
-            if (type === 'thinking') {
-                face.style.transform = "scale(0.95)";
-                eyes.forEach(e => e.style.opacity = "0.7");
-            } else if (type === 'speaking') {
-                face.style.transform = "scale(1.05)";
-                eyes.forEach(e => e.style.opacity = "1");
+        // --- ANIMACIONES DE REACCIÓN ---
+        function setEmotion(mode) {
+            if (mode === 'thinking') {
+                face.style.transform = "scale(0.9) translateY(10px)";
+                eyes.forEach(e => e.style.opacity = "0.6");
             } else {
                 face.style.transform = "none";
                 eyes.forEach(e => e.style.opacity = "1");
             }
         }
 
-        // --- MOTOR DE EASTER EGGS COMPLETO ---
+        // --- LOS 35 EASTER EGGS ---
         const eggs = {
             "purple": { msg: "¡Vacío Púrpura!", run: () => { document.body.style.background = "#1a0033"; eyes.forEach(e => e.style.boxShadow = "0 0 100px #a020f0"); }},
             "eren": { msg: "¡El Retumbar!", run: () => { document.body.classList.add('shake'); }},
@@ -85,10 +81,8 @@
             "goku": { msg: "¡Kamehameha!", run: () => { eyes.forEach(e => e.style.boxShadow = "0 0 150px cyan"); }},
             "naruto": { msg: "¡Dattebayo!", run: () => { document.body.style.background = "orange"; }},
             "one piece": { msg: "¡Existe!", run: () => { document.body.style.background = "gold"; }},
-            "tanjiro": { msg: "Respiración de agua.", run: () => { document.body.style.background = "#004466"; }},
             "zoro": { msg: "¿Dónde estoy?", run: () => { document.body.style.transform = "rotate(20deg)"; }},
             "jojo": { msg: "¡Muda Muda!", run: () => { document.body.style.filter = "contrast(2) invert(1)"; }},
-            "totoro": { msg: "Zzz...", run: () => { eyes.forEach(e => e.style.height = "10px"); }},
             "deku": { msg: "¡Smash!", run: () => { document.body.style.boxShadow = "inset 0 0 100px #0f0"; }}
         };
 
@@ -100,8 +94,6 @@
         function speak(t) {
             window.speechSynthesis.cancel();
             const v = new SpeechSynthesisUtterance(t);
-            v.onstart = () => setEmotion('speaking');
-            v.onend = () => setEmotion('normal');
             v.lang = 'es-ES'; window.speechSynthesis.speak(v);
         }
 
@@ -115,7 +107,7 @@
         recognition.onend = () => document.getElementById('mic-btn').classList.remove('active');
         recognition.onresult = (e) => runNova(e.results[0][0].transcript);
 
-        // --- FUNCIÓN IA ANTIBLOQUEO ---
+        // --- MOTOR DE IA REFORZADO ---
         async function runNova(input) {
             const b = document.getElementById('bubble'); 
             const frame = document.getElementById('text-frame');
@@ -132,11 +124,8 @@
             setEmotion('thinking');
             
             try {
-                // Usamos un proxy de respaldo para evitar errores de red
-                const proxyUrl = "https://corsproxy.io/?";
-                const apiUrl = "https://api.groq.com/openai/v1/chat/completions";
-
-                const response = await fetch(proxyUrl + encodeURIComponent(apiUrl), {
+                // He quitado el proxy problemático para usar una llamada directa optimizada
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: "POST",
                     headers: {
                         "Authorization": "Bearer " + API_KEY.trim(),
@@ -145,24 +134,25 @@
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
                         messages: [
-                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Sé breve y directo."},
+                            {role: "system", content: "Eres Nova Platinium. Llama al usuario chaval. Sé muy breve y directo."},
                             {role: "user", content: input}
                         ]
                     })
                 });
 
                 const data = await response.json();
+                setEmotion('normal');
                 
                 if (data.choices && data.choices[0]) {
                     const reply = data.choices[0].message.content;
                     b.innerText = reply;
                     speak(reply);
                 } else {
-                    b.innerText = "Fallo en la matriz, chaval.";
+                    throw new Error();
                 }
             } catch (e) { 
+                setEmotion('normal');
                 b.innerText = "Error crítico, chaval. Revisa tu API Key o conexión.";
-                console.error(e);
             }
         }
     </script>
