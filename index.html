@@ -3,18 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NOVA - PURE LIGHT 35 EGGS</title>
+    <title>NOVA - BIG PURE LIGHT 35 EGGS</title>
     <style>
         :root { --eye-color: #ffffff; --bg: #000; }
         body { margin: 0; background: var(--bg); color: white; font-family: 'SF Pro Display', sans-serif; height: 100vh; overflow: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; }
         #fx-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         #text-frame { width: 80%; max-height: 180px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.3); border-radius: 20px; margin-bottom: 60px; padding: 20px; overflow-y: auto; backdrop-filter: blur(15px); z-index: 10; opacity: 0; transition: 0.6s; text-align: center; }
         #text-frame.visible { opacity: 1; }
-        .eye-container { display: flex; gap: 75px; z-index: 10; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
-        .eye { width: 70px; height: 70px; background: var(--eye-color); border-radius: 50%; box-shadow: 0 0 40px var(--eye-color), 0 0 10px rgba(255,255,255,0.5); transition: height 0.15s, transform 0.3s, background 0.3s; }
-        .eye.proud { transform: scale(1.15); box-shadow: 0 0 60px var(--eye-color); }
+        
+        /* --- ESTA ES LA LÍNEA QUE HE CAMBIADO (Mismo código, ojos más grandes y separados) --- */
+        .eye-container { display: flex; gap: 110px; z-index: 10; transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); }
+        .eye { width: 120px; height: 120px; background: var(--eye-color); border-radius: 50%; box-shadow: 0 0 60px var(--eye-color), 0 0 20px rgba(255,255,255,0.5); transition: height 0.15s, transform 0.3s, background 0.3s; }
+        /* --- FIN DEL CAMBIO --- */
+
+        .eye.proud { transform: scale(1.15); box-shadow: 0 0 80px var(--eye-color); }
         .eye.angry { transform: scaleY(0.4); opacity: 0.8; }
-        .eye.blink { height: 1px !important; }
+        .eye.blink { height: 2px !important; }
         #mic-btn { position: fixed; bottom: 40px; width: 65px; height: 65px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255,255,255,0.4); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; z-index: 100; transition: 0.3s; }
         #mic-btn.active { background: rgba(255,255,255,0.15); box-shadow: 0 0 25px white; }
         @keyframes rumble { 0% { transform: translate(1px, 1px); } 50% { transform: translate(-2px, -1px); } 100% { transform: translate(1px, 1px); } }
@@ -37,14 +41,14 @@
         const eggs = {
             "purple": { msg: "¡Púrpura!", emo: "proud", run: () => { document.body.style.background = "#1a0033"; }},
             "eren": { msg: "¡El Retumbar!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
-            "sukuna": { msg: "Corte dimensional.", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:2px;background:white;position:absolute;top:50%;box-shadow:0 0-15px red;"></div>'; }},
+            "sukuna": { msg: "Corte dimensional.", emo: "angry", run: () => { document.getElementById('fx-layer').innerHTML='<div style="width:100%;height:3px;background:white;position:absolute;top:50%;box-shadow:0 0-20px red;"></div>'; }},
             "goku": { msg: "¡Kamehameha!", emo: "proud", run: () => { document.body.style.background = "#001122"; }},
             "sharingan": { msg: "Sharingan.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); }},
             "matrix": { msg: "Entrando en la red.", emo: "proud", run: () => { document.body.style.background = "#020"; }},
             "vegeta": { msg: "¡Insecto!", emo: "angry", run: () => { document.body.style.filter = "contrast(1.5)"; }},
             "luffy": { msg: "¡Gear Second!", emo: "proud", run: () => { document.body.style.filter = "brightness(1.5) saturate(1.5)"; }},
             "tanjiro": { msg: "Respiración de Agua.", emo: "proud", run: () => { document.body.style.background = "#004466"; }},
-            "shin chan": { msg: "¡Culetazo!", emo: "proud", run: () => { document.getElementById('face').style.transform="translateY(40px)"; }},
+            "shin chan": { msg: "¡Culetazo!", emo: "proud", run: () => { document.getElementById('face').style.transform="translateY(60px)"; }},
             "naruto": { msg: "¡Dattebayo!", emo: "proud", run: () => { document.body.style.background = "#ff6600"; }},
             "zoro": { msg: "Me he perdido.", emo: "angry", run: () => { document.body.style.transform = "rotate(5deg)"; }},
             "saitama": { msg: "Un puñetazo.", emo: "angry", run: () => { document.body.style.background = "#900"; }},
@@ -52,72 +56,10 @@
             "zenitsu": { msg: "¡Trueno!", emo: "proud", run: () => { document.body.style.background = "yellow"; setTimeout(()=>document.body.style.background="#000",200); }},
             "death note": { msg: "Nombre escrito.", emo: "angry", run: () => { document.body.style.filter = "grayscale(1)"; }},
             "one piece": { msg: "¡Existe!", emo: "proud", run: () => { document.body.style.background = "#ffcc66"; }},
-            "itachi": { msg: "Genjutsu.", emo: "angry", run: () => { document.body.style.filter = "blur(5px)"; }},
+            "itachi": { msg: "Genjutsu.", emo: "angry", run: () => { document.body.style.filter = "blur(7px)"; }},
             "totoro": { msg: "...", emo: "proud", run: () => { document.body.style.background = "#555"; }},
             "pokemon": { msg: "¡Atrapado!", emo: "proud", run: () => { document.body.style.background = "linear-gradient(red 50%, white 50%)"; }},
             "sung jin woo": { msg: "¡Surge!", emo: "proud", run: () => { document.body.style.background = "#110022"; }},
             "rimuru": { msg: "Depredador.", emo: "proud", run: () => { document.body.style.borderRadius = "30%"; }},
-            "deku": { msg: "¡Smash!", emo: "proud", run: () => { document.body.style.boxShadow = "inset 0 0 50px green"; }},
-            "asta": { msg: "¡Antimagia!", emo: "angry", run: () => { document.body.style.background = "#111"; }},
-            "meliodas": { msg: "Contraataque.", emo: "proud", run: () => { document.body.style.filter = "hue-rotate(90deg)"; }},
-            "all might": { msg: "¡Plus Ultra!", emo: "proud", run: () => { document.body.style.background = "blue"; }},
-            "ken kaneki": { msg: "Mil menos siete.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); document.body.style.background = "#111"; }},
-            "dr stone": { msg: "Al 10000%.", emo: "proud", run: () => { document.body.style.filter = "sepia(0.5)"; }},
-            "light yagami": { msg: "Soy la justicia.", emo: "proud", run: () => { document.body.style.background = "#200"; }},
-            "mikasa": { msg: "Eres familia.", emo: "proud", run: () => { document.body.style.background = "#400"; }},
-            "inosuke": { msg: "¡Asalto!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
-            "nezuko": { msg: "¡Mmh!", emo: "proud", run: () => { document.body.style.background = "pink"; }},
-            "bakugo": { msg: "¡Shine!", emo: "angry", run: () => { document.body.style.background = "orange"; }},
-            "hisoka": { msg: "Bungee Gum.", emo: "proud", run: () => { document.body.style.background = "#ff00ff"; }},
-            "sanji": { msg: "Diable Jambe.", emo: "proud", run: () => { document.body.style.background = "#ff4500"; }}
-        };
-
-        function cleanText(t) { return t.replace(/[*#_~-]/g, ''); }
-        function speak(t) { window.speechSynthesis.cancel(); const v = new SpeechSynthesisUtterance(cleanText(t)); v.lang = 'es-ES'; window.speechSynthesis.speak(v); }
-
-        function lookAround() { if (!isListening) { const x = (Math.random()*24)-12; const y = (Math.random()*12)-6; document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`; } setTimeout(lookAround, Math.random()*4000+2000); }
-        lookAround();
-
-        function naturalBlink() { eyes.forEach(e => e.classList.add('blink')); setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 120); setTimeout(naturalBlink, Math.random()*6000+1500); }
-        naturalBlink();
-
-        function handleInteraction(e) { if (e.target.id === 'mic-btn' || isListening) return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
-        function toggleMic(e) { e.stopPropagation(); if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } else { recognition.stop(); } }
-        recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('active'); };
-        recognition.onresult = (e) => { runNova(e.results[0][0].transcript); };
-
-        async function runNova(input) {
-            const t = input.toLowerCase();
-            const b = document.getElementById('bubble');
-            const frame = document.getElementById('text-frame');
-            document.body.className = ""; document.body.style.background = "#000"; document.body.style.filter = "none"; document.body.style.transform = "none";
-            document.getElementById('fx-layer').innerHTML = "";
-            eyes.forEach(e => {e.classList.remove('proud', 'angry'); e.style.background = "white";});
-            
-            for (let key in eggs) {
-                if (t.includes(key)) {
-                    eggs[key].run();
-                    if(eggs[key].emo === "proud") eyes.forEach(e=>e.classList.add('proud'));
-                    if(eggs[key].emo === "angry") eyes.forEach(e=>e.classList.add('angry'));
-                    b.innerText = eggs[key].msg;
-                    frame.classList.add('visible');
-                    speak(eggs[key].msg);
-                    return;
-                }
-            }
-
-            b.innerText = "Pensando..."; frame.classList.add('visible');
-            try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
-                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova. Colega de Carlos (chaval). No uses asteriscos ni marcas de texto."}, {role:"user", content:input}] })
-                });
-                const data = await res.json();
-                const reply = data.choices[0].message.content;
-                b.innerText = reply; speak(reply);
-            } catch (e) { b.innerText = "Error, chaval."; }
-        }
-    </script>
-</body>
-</html>
+            "deku": { msg: "¡Smash!", emo: "proud", run: () => { document.body.style.boxShadow = "inset 0 0 60px green"; }},
+            "asta": { msg:
