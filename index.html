@@ -62,4 +62,66 @@
             "sung jin woo": { msg: "¡Surge!", emo: "proud", run: () => { document.body.style.background = "#110022"; }},
             "rimuru": { msg: "Depredador.", emo: "proud", run: () => { document.body.style.borderRadius = "30%"; }},
             "deku": { msg: "¡Smash!", emo: "proud", run: () => { document.body.style.boxShadow = "inset 0 0 60px green"; }},
-            "asta": { msg:
+            "asta": { msg: "¡Antimagia!", emo: "angry", run: () => { document.body.style.background = "#111"; }},
+            "meliodas": { msg: "Contraataque.", emo: "proud", run: () => { document.body.style.filter = "hue-rotate(90deg)"; }},
+            "all might": { msg: "¡Plus Ultra!", emo: "proud", run: () => { document.body.style.background = "blue"; }},
+            "ken kaneki": { msg: "Mil menos siete.", emo: "angry", run: () => { eyes.forEach(e => e.style.background = "red"); document.body.style.background = "#111"; }},
+            "dr stone": { msg: "Al 10000%.", emo: "proud", run: () => { document.body.style.filter = "sepia(0.5)"; }},
+            "light yagami": { msg: "Soy la justicia.", emo: "proud", run: () => { document.body.style.background = "#200"; }},
+            "mikasa": { msg: "Eres familia.", emo: "proud", run: () => { document.body.style.background = "#400"; }},
+            "inosuke": { msg: "¡Asalto!", emo: "angry", run: () => { document.body.classList.add('shake'); }},
+            "nezuko": { msg: "¡Mmh!", emo: "proud", run: () => { document.body.style.background = "pink"; }},
+            "bakugo": { msg: "¡Shine!", emo: "angry", run: () => { document.body.style.background = "orange"; }},
+            "hisoka": { msg: "Bungee Gum.", emo: "proud", run: () => { document.body.style.background = "#ff00ff"; }},
+            "sanji": { msg: "Diable Jambe.", emo: "proud", run: () => { document.body.style.background = "#ff4500"; }}
+        };
+
+        function cleanText(t) { return t.replace(/[*#_~-]/g, ''); }
+        function speak(t) { window.speechSynthesis.cancel(); const v = new SpeechSynthesisUtterance(cleanText(t)); v.lang = 'es-ES'; window.speechSynthesis.speak(v); }
+
+        function lookAround() { if (!isListening) { const x = (Math.random()*30)-15; const y = (Math.random()*15)-7; document.getElementById('face').style.transform = `translate(${x}px, ${y}px)`; } setTimeout(lookAround, Math.random()*4000+2000); }
+        lookAround();
+
+        function naturalBlink() { eyes.forEach(e => e.classList.add('blink')); setTimeout(() => eyes.forEach(e => e.classList.remove('blink')), 120); setTimeout(naturalBlink, Math.random()*6000+1500); }
+        naturalBlink();
+
+        function handleInteraction(e) { if (e.target.id === 'mic-btn' || isListening) return; const p = prompt("Dime algo, chaval:"); if(p) runNova(p); }
+        function toggleMic(e) { e.stopPropagation(); if (!isListening) { recognition.start(); document.getElementById('mic-btn').classList.add('active'); } else { recognition.stop(); } }
+        recognition.onend = () => { isListening = false; document.getElementById('mic-btn').classList.remove('active'); };
+        recognition.onresult = (e) => { runNova(e.results[0][0].transcript); };
+
+        async function runNova(input) {
+            const t = input.toLowerCase();
+            const b = document.getElementById('bubble');
+            const frame = document.getElementById('text-frame');
+            document.body.className = ""; document.body.style.background = "#000"; document.body.style.filter = "none"; document.body.style.transform = "none";
+            document.getElementById('fx-layer').innerHTML = "";
+            eyes.forEach(e => {e.classList.remove('proud', 'angry'); e.style.background = "white";});
+            
+            for (let key in eggs) {
+                if (t.includes(key)) {
+                    eggs[key].run();
+                    if(eggs[key].emo === "proud") eyes.forEach(e=>e.classList.add('proud'));
+                    if(eggs[key].emo === "angry") eyes.forEach(e=>e.classList.add('angry'));
+                    b.innerText = eggs[key].msg;
+                    frame.classList.add('visible');
+                    speak(eggs[key].msg);
+                    return;
+                }
+            }
+
+            b.innerText = "Pensando..."; frame.classList.add('visible');
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Authorization": "Bearer " + API_KEY },
+                    body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role:"system", content:"Eres Nova. Colega de Carlos (chaval). No uses asteriscos ni marcas de texto."}, {role:"user", content:input}] })
+                });
+                const data = await res.json();
+                const reply = data.choices[0].message.content;
+                b.innerText = reply; speak(reply);
+            } catch (e) { b.innerText = "Error, chaval."; }
+        }
+    </script>
+</body>
+</html>
